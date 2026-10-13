@@ -40,4 +40,24 @@ Chạy gobuster thì cũng không thấy gì đặc biệt:
  ![[Pasted image 20261013152122.png]]
 
 
-Mình quay sang test lại SQL injection (vì đây là con đuon)
+Mình quay sang test lại SQL injection (vì đây là con đường cuối cùng mình nghĩ ra 😞). Nãy mình có test qua SQL injection nhưng mình bị bias chỉ test ở mật khẩu, do mô tuyp chủ quan của mình, mấy bài SQL Injection dễ mình hay làm sẽ có dạng query kiểu:
+
+```
+SELECT * FROM users WHERE username=<input> and password=<input>  
+```
+Nên nãy mình chủ quan chỉ test của password và cho qua luôn.
+
+Giờ test kĩ hơn, mình mới tìm được lỗ hỏng SQL injection ở uname 😆:
+![[Pasted image 20261013152658.png]]
+
+Có lẽ 'big technology' mà đề bài muốn nhắc đến ở đây có lẽ là một thuật toán hashing mật khẩu nảo đó, khi mật khẩu đã được hash thì dấu comment -- cũng sẽ biến mất theo dẫn đến SQLi thất bại:
+```
+SELECT * FROM users WHERE username=<input> and password=hashed(<input>)  
+```
+
+Giờ mình khai thác lỗ hỏng này tuần tự, do đề bài không cho thông tin gì về tài khoản admin hay gì đó nên chắc là mình sẽ phải tìm flag trong database:
+1) Xác định số lượng cột trả về của query: Ở đây có 2 cách là dùng UNION SELECT null,null... và ORDER BY ...(Bạn có thể tìm hiểu trên PortSwigger). Nhưng có lẽ database đã định dạng các cột là not NULL nên mình không dùng trick thứ nhất được -> Mình dùng ORDER BY để xác định số cột:
+![[Pasted image 20261013153403.png]]
+
+![[Pasted image 20261013153419.png]]
+=> Có tổng cộng 4 cột trả về.
