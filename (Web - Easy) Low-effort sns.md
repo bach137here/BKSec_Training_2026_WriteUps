@@ -18,3 +18,11 @@ Thế là mình đã tìm được vector đầu tiên:D
 
 ![[Pasted image 20261013113459.png]]
 Khi đăng nhập vào thì mình chỉ nhận được một thông báo thế này
+Mình không tim thấy gì đặc biệt sau khi đăng nhập lắm nên mình thử dò một lúc bằng cách đăng nhập/ đăng kí với username admin:
+
+Logic đăng nhập là khi người dùng nhập sai dù là tài khoản hay mật khẩu thì sẽ gửi một request về / với param error='invalid username or password'
+![[Pasted image 20261013114257.png]]
+Mình không thấy gì đặc biệt khi thay đổi param này và cảm giác như param này không được dùng để làm gì hết ý.
+
+![[Pasted image 20261013114342.png]]
+Mình thử đăng kí với username admin thì vẫn được
