@@ -33,3 +33,6 @@ Mình thử username emunarate nhẹ nhàng thì không thầy gì đặc biệt
 ![[Pasted image 20261013121756.png]]
 
 Khá stuck do không biết flag mình cần lấy ở chỗ nào... Mình không thấy dấu hiệu của admin bot hay gì nên cảm giác vector XSS nãy tìm được không có ích lắm.
+
+Chạy gobuster thì cũng không thấy gì đặc biệt:
+![[Pasted image 20261013122359.png]]
