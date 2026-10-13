@@ -25,4 +25,11 @@ Logic đăng nhập là khi người dùng nhập sai dù là tài khoản hay m
 Mình không thấy gì đặc biệt khi thay đổi param này và cảm giác như param này không được dùng để làm gì hết ý.
 
 ![[Pasted image 20261013114342.png]]
-Mình thử đăng kí với username admin thì vẫn được
+Mình thử đăng kí với username admin thì vẫn được.
+
+Mình thử username emunarate nhẹ nhàng thì không thầy gì đặc biệt:
+![[Pasted image 20261013121652.png]]
+
+![[Pasted image 20261013121756.png]]
+
+Khá stuck do không biết flag mình cần lấy ở chỗ nào... Mình không thấy dấu hiệu của admin bot hay gì nên cảm giác vector XSS nãy tìm được không có ích lắm.
