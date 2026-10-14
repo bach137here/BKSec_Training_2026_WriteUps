@@ -28,10 +28,9 @@ Và chơi all-in theo cách này thì đương nhiên phải trúng 10 lần li�
 
 $0.5^(10) \approx 1/2024$
 
+Nên trung bình 1024 lượt chơi thì sẽ có 1 lần thành công.
 
-
-
-
+Như vậy brute-force là hoàn toàn khả thi. Để tăng tốc độ brute-force tối đa thì mình nhờ AI viết script brute-force:
 
 ```python
 import http.client
@@ -205,3 +204,6 @@ def main():
 if __name__ == "__main__":
     main()
 ```
+
+M
+![[Pasted image 20261014152857.png]]
