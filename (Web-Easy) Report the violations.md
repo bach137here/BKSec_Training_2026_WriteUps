@@ -1,0 +1,18 @@
+![[Pasted image 20261014163549.png]]
+
+For prompt resolution :))
+
+
+![[Pasted image 20261014163928.png]]
+
+Trang web chỉ có một chức năng duy nhất là Post một comment lên. Mình không tìm thấy chức năng nào khác nữa.
+
+Đến đây thì mình đoán ngay đây là dạng lỗ hỏng Stored XSS.
+
+![[Pasted image 20261014164503.png]]
+
+
+Đến đây mình thấy công việc khá đơn giản và rõ ràng là chỉ cần brute-force thử xem tag nào cho phép chèn vào là xong.
+
+Mình lấy danh sách các tag từ: https://portswigger.net/web-security/cross-site-scripting/cheat-sheet Cheat sheet của Port Swigger.
+
