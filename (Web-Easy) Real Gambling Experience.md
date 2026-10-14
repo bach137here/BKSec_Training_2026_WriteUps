@@ -26,10 +26,14 @@ $1*2^n \geq 999 \implies n \geq \log_{2}999 \approx 10$
 Do đó cần 10 attempt để có thể đạt được qua 999 coin.
 Và chơi all-in theo cách này thì đương nhiên phải trúng 10 lần liên tiếp, mà tỉ lệ thắng/thua sẽ là 50/50 nên xác suất all-in thành công là:
 
-$0.5^(10) \approx 1/2024$
+$0.5^{10} \approx 1/1024$
 
-Nên trung bình 1024 lượt chơi thì sẽ có 1 lần thành công.
+Để bạn dễ hình dung thì tỉ lệ có 1 lần thắng trong 100 lần thử sẽ là:
 
+$$ 1-(1023/1024)^{100} \approx 9 \%$$ 
+1000 lần tỉ lệ sẽ là
+
+$$ 1-(1023/1024)^{1000} \approx 62.3 \%$$
 Như vậy brute-force là hoàn toàn khả thi. Để tăng tốc độ brute-force tối đa thì mình nhờ AI viết script brute-force:
 
 ```python
@@ -205,5 +209,5 @@ if __name__ == "__main__":
     main()
 ```
 
-M
+Sau 132 lần thì mình lấy FLAG thành công 😀 
 ![[Pasted image 20261014152857.png]]
