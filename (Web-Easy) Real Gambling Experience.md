@@ -24,7 +24,11 @@ Cách nhanh nhất để tăng từ 1 lên 999 chính là để tên tăng lên 
 $1*2^n \geq 999 \implies n \geq \log_{2}999 \approx 10$
 
 Do đó cần 10 attempt để có thể đạt được qua 999 coin.
-Và chơi all-in theo cách này thì đương nhiên phải trúng 10 lần liên tiếp, do
+Và chơi all-in theo cách này thì đương nhiên phải trúng 10 lần liên tiếp, mà tỉ lệ thắng/thua sẽ là 50/50 nên xác suất all-in thành công là:
+
+$0.5^(10) \approx 1/2024$
+
+
 
 
 
