@@ -19,7 +19,14 @@ Server lưu số tiền còn lại của mình ứng với session cookie nên k
 
 Lúc này mình tính toán để nghĩ đến phương án Brute-force bằng cách gửi hàng trăm nghìn request với nhiều session khác nhau chạy đồng thời vào:
 
-Cách nhanh nhất để tăng từ 1 lên 999 
+Cách nhanh nhất để tăng từ 1 lên 999 chính là để tên tăng lên theo cấp số nhân:
+
+$1*2^n \geq 999 \implies n \geq \log_{2}999 \approx 10$
+
+Do đó cần 10 attempt để có thể đạt được qua 999 coin.
+Và chơi all-in theo cách này thì đương nhiên phải trúng 10 lần liên tiếp, do
+
+
 
 
 ```python
