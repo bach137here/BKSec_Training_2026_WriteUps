@@ -57,3 +57,10 @@ Test thêm một lúc thì WAF dường như chỉ chặn ở tầng keyword. M�
 
 ![[Pasted image 20261015180316.png]]
 
+![[Pasted image 20261015181047.png]]
+Mình được đăng nhập ở quyền root luôn 😀
+
+
+Mình nhờ AI làm cái shell pha ke do không có VPS:))
+![[Pasted image 20261015181515.png]]
+
