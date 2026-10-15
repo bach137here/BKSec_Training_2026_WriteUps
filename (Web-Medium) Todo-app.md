@@ -5,6 +5,7 @@ Tài liệu/Bài báo tham khảo:
 
 SSTI cheat-sheet: https://github.com/l1ackersalman/Bug-Hunting-Cheatsheet/blob/main/SSTI.md
 https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html
+https://www.youtube.com/watch?v=SN6EVIG4c-0
 
 ---
 
@@ -63,14 +64,14 @@ Nói đơn giản thì do WAF của app đã chặn lấy shell trực tiếp n�
 
 - Mấy cái như kiểu '\x5f\x5finit\x5f\x5f' trông thì ghê nhưng bạn dán vào python sẽ thấy nó chỉ là string bình thường để né WAF thôi hehe.
 - ![[Pasted image 20261015212235.png]]
-- Sau đó mình dùng getattr để lấy  `__init__` của Cycler, cứ như thế
+- Sau đó mình dùng getattr để lấy  `__init__` của Cycler, cứ như thế mình leo được lên os và chèn shell thành công!
 ![[Pasted image 20261015180316.png]]
 
 ![[Pasted image 20261015181047.png]]
 Mình được đăng nhập ở quyền root luôn 😀
 
 
-Mình nhờ AI làm cái shell pha ke do không có VPS:))
+Mình nhờ AI làm cái shell pha-ke bằng cách gửi request và lấy response bằng payload vừa tìm được do máy chủ challenge không được kết nối với Internet ngoài nên không chèn reverse shell được:))
 ![[Pasted image 20261015181515.png]]
 
 
