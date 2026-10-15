@@ -73,3 +73,11 @@ Mình cat requirements.txt thì được mà cat cái khác thì không, WAF kh�
 Hmm mình không ngờ WAF chặt vậy :))
 ![[Pasted image 20261015183450.png]]
 
+![[Pasted image 20261015183839.png]]
+
+Cuối cùng mình thử đơn giản lại thành công :)) Troll troll vn
+
+![[Pasted image 20261015184349.png]]
+
+![[Pasted image 20261015184443.png]]
+![[Pasted image 20261015184548.png]]
