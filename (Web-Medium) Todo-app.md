@@ -55,8 +55,15 @@ Test thêm một lúc thì WAF dường như chỉ chặn ở tầng keyword. M�
 
 Giải thích payload:
 Để hiểu cơ chế thì bạn có thể tham khảo video này, giải thích cực kì dễ hiểu kaka: https://www.youtube.com/watch?v=SN6EVIG4c-0
-- Cycler: Một class được import trong Jinja2
-- ![[Pasted image 20261015210742.png]]
+Nói đơn giản thì do WAF của app đã chặn lấy shell trực tiếp nên mình cần tìm cách nào đó để lấy shell một cách lươn lẹo bằng các gadget có sẵn kaka
+
+- Cycler: Một class được import trong Jinja2, có rất nhiều lựa chọn khác nữa mọi người cứ test nhé, làm sao để đến được mấy cái nguy hiểm như `os`, `subprocess`, `__builtins__.__import__`, `__subclasses__`, `pty`... là được
+ ![[Pasted image 20261015210742.png]]
+![[Pasted image 20261015211359.png]]
+
+- Mấy cái như kiểu '\x5f\x5finit\x5f\x5f' trông thì ghê nhưng bạn dán vào python sẽ thấy nó chỉ là string bình thường để né WAF thôi hehe.
+- ![[Pasted image 20261015212235.png]]
+- Sau đó mình dùng getattr để lấy  `__init__` của Cycler, cứ như thế
 ![[Pasted image 20261015180316.png]]
 
 ![[Pasted image 20261015181047.png]]
