@@ -15,3 +15,17 @@ Decode đoạn base64 thì mình thu được:
 
 Chỉnh sửa một chút thì mình được source content như sau:
 ![[Pasted image 20261015214141.png]]
+
+Mình tìm kiếm các endpoint, từ khóa ở trong source này mà không thấy gì đặc biệt. Tạm thời mình xem cái khác trước.
+
+![[Pasted image 20261015215531.png]]
+Wow, mình có thể đọc hết các file trong /app hehe.
+![[Pasted image 20261015215656.png]]
+![[Pasted image 20261015220028.png|652]]
+
+![[Pasted image 20261015220250.png]]
+
+
+
+Mình vượt qua kiểm duyệt và đọc được flag thành công:D
+![[Pasted image 20261015220719.png]]
