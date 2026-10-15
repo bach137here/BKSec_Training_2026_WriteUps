@@ -35,4 +35,4 @@ Trong lúc test SQLi thì mình tự nhiên nảy ra ý tưởng đổi body th�
 ![[Pasted image 20261015234948.png]]
 
 Nhưng multipart thì vẫn nhận:
-![[Pasted image 20261015235116.png]]
+![[Pasted image 20261015235116.png]]Mình đổi content
