@@ -16,16 +16,21 @@ Decode đoạn base64 thì mình thu được:
 Chỉnh sửa một chút thì mình được source content như sau:
 ![[Pasted image 20261015214141.png]]
 
-Mình tìm kiếm các endpoint, từ khóa ở trong source này mà không thấy gì đặc biệt. Tạm thời mình xem cái khác trước.
+Mình tìm kiếm các endpoint, từ khóa ở trong source client này mà không thấy gì đặc biệt. Tạm thời mình xem cái khác trước.
 
-![[Pasted image 20261015215531.png]]
-Wow, mình có thể đọc hết các file trong /app hehe.
-![[Pasted image 20261015215656.png]]
-![[Pasted image 20261015220028.png|652]]
+Mình để ý thấy đây là dev server của vite:
+![[Pasted image 20261015221348.png]]
 
-![[Pasted image 20261015220250.png]]
+Mình thấy có một CVE cho vite dev server:
+![[Pasted image 20261015221534.png]]
+Khá liên quan đến mô tả của challenge "Open Source" :D và đọc file:
+![[Pasted image 20261015221644.png]]
 
+Chưa thêm ?raw??:
+![[Pasted image 20261015221734.png]]
 
-
-Mình vượt qua kiểm duyệt và đọc được flag thành công:D
+Thêm theo CVE:
 ![[Pasted image 20261015220719.png]]
+
+Ý của flag là nên update version mới thường xuyên kaka, do lỗ hỏng này xuất hiện ở các version cũ:
+![[Pasted image 20261015221927.png]]
