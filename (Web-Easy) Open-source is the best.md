@@ -12,3 +12,6 @@ Kéo xuống dưới thì mình thấy một comment khá khả nghi:
 Decode đoạn base64 thì mình thu được:
 ![[Pasted image 20261015213438.png]]
 
+
+Chỉnh sửa một chút thì mình được source content như sau:
+![[Pasted image 20261015214141.png]]
