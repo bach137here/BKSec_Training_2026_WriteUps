@@ -25,4 +25,14 @@ Mình test chức năng xóa, thấy một điều khá lạ là chuyển sang s
 ![[Pasted image 20261015231725.png]]
 
 
-Mình tính test thêm SSTI ở chức năng add, trong lúc cho SSTI chạy thì min
+Mình tính test thêm SSTI ở chức năng add, trong lúc cho SSTI chạy thì mình để ý thấy một cái khá hay, là khi mình đổi status thành khác thì các event bị mất đi:
+![[Pasted image 20261015233908.png]]
+![[Pasted image 20261015233920.png]]
+
+Điều này giúp mình đặt ra nghi vấn có lẽ nào Param này liên quan tới một query SQL? -> Mình test thêm SQL injection ở đây. (Update lúc sau: Ko được)
+
+Trong lúc test SQLi thì mình tự nhiên nảy ra ý tưởng đổi body thành dạng json rồi tìm xem có phương án tấn công kiểu như Prototype Pollution được không nhưng không được:
+![[Pasted image 20261015234948.png]]
+
+Nhưng multipart thì vẫn nhận:
+![[Pasted image 20261015235116.png]]
