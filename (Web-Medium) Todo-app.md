@@ -64,3 +64,12 @@ Mình được đăng nhập ở quyền root luôn 😀
 Mình nhờ AI làm cái shell pha ke do không có VPS:))
 ![[Pasted image 20261015181515.png]]
 
+
+Mình cat requirements.txt thì được mà cat cái khác thì không, WAF khá ảo 😅
+![[Pasted image 20261015182649.png]]
+
+![[Pasted image 20261015182925.png]]
+
+Hmm mình không ngờ WAF chặt vậy :))
+![[Pasted image 20261015183450.png]]
+
