@@ -41,6 +41,7 @@ Sau khi test thì mình biết đây là Jinja. Mình thử exploit bằng paylo
 ![[Pasted image 20261015171741.png]]
 
 
-Thử thêm một vài cách nữa mà vẫn không thành công nên mình quyết định dùng tplmap để automate quá trình exploit:
+Thử thêm một vài cách nữa mà vẫn không thành công nên mình quyết định dùng SSTImap để automate quá trình exploit:
 
-
+![[Pasted image 20261015175154.png]]
+Tool phát hiện được nhưng không exploit được, thế là mình 
