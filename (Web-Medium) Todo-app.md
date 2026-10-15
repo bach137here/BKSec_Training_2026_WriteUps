@@ -44,4 +44,16 @@ Sau khi test thì mình biết đây là Jinja. Mình thử exploit bằng paylo
 Thử thêm một vài cách nữa mà vẫn không thành công nên mình quyết định dùng SSTImap để automate quá trình exploit:
 
 ![[Pasted image 20261015175154.png]]
-Tool phát hiện được nhưng không exploit được, thế là mình 
+Tool phát hiện được nhưng không exploit được, thế là mình lại phải làm thủ công 🥱
+
+
+Mình nhờ AI viết script nho nhỏ để check xem WAF chặn gì:
+![[Pasted image 20261015175816.png]]
+
+Test thêm một lúc thì WAF dường như chỉ chặn ở tầng keyword. Mình exploit thành công sử dụng payload:
+`{{cycler|attr('\x5f\x5finit\x5f\x5f')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('o'+'s')|attr('po'+'pen')('i'+'d')|attr('read')()}}`
+
+
+
+![[Pasted image 20261015180316.png]]
+
