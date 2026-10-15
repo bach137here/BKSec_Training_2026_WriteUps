@@ -1,5 +1,13 @@
 
 
+---
+Tài liệu/Bài báo tham khảo:
+
+SSTI cheat-sheet: https://github.com/l1ackersalman/Bug-Hunting-Cheatsheet/blob/main/SSTI.md
+https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html
+
+---
+
 ![[Pasted image 20261015115341.png]]
 
 Thêm task mới chỉ đơn giản là gửi một POST request đến server với body bao gồm todo=`<input>`
@@ -23,3 +31,15 @@ cookie có dấu chấm ở đầu nên được nén bởi zlib:
 
 Mình thử giải nén ra xem có những gì:
 ![[Pasted image 20261015121038.png]]
+
+Không thấy gì đặc biết lắm, nếu gặp token không hợp lệ server tự cấp token mới. Nên mình chuyển sang hướng khác, test thử SSTI, ai ngờ được thật 😀 
+![[Pasted image 20261015171058.png]]
+
+![[Pasted image 20261015171628.png]]
+
+Sau khi test thì mình biết đây là Jinja. Mình thử exploit bằng payload `{{ config }}` thì gặp 'hack detected':
+![[Pasted image 20261015171741.png]]
+
+
+
+![[Pasted image 20261015172107.png]]
