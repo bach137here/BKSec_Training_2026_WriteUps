@@ -24,5 +24,5 @@ Mình dùng SQLMap kiểm tra xem có lỗ hỏng SQL injection ở đây không
 Mình test chức năng xóa, thấy một điều khá lạ là chuyển sang số 9 vẫn bị xóa event:
 ![[Pasted image 20261015231725.png]]
 
-Chức năng add cho phép thêm event mà không cần cookie:
-![[Pasted image 20261015232128.png]]
+
+Mình tính test thêm SSTI ở chức năng add, trong lúc cho SSTI chạy thì min
