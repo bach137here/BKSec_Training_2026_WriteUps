@@ -41,4 +41,7 @@ Mình thử decode cookie xem có gì không mà không thấy gì đặc biệt
 ![[Pasted image 20261016082949.png]]
 
 
-Mình thử test tiếp bằng cách gửi một OPTIONS request, ai ngờ mình còn được gửi HEAD requests nữa.
+Mình thử test tiếp bằng cách gửi một OPTIONS request đến /, mình thấy còn được gửi HEAD requests nữa.
+![[Pasted image 20261016090011.png]]
+
+![[Pasted image 20261016090015.png]]
