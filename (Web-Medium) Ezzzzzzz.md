@@ -40,3 +40,5 @@ Nhưng multipart thì vẫn nhận:
 Mình thử decode cookie xem có gì không mà không thấy gì đặc biệt:
 ![[Pasted image 20261016082949.png]]
 
+
+Mình thử test tiếp bằng cách gửi một OPTIONS request, ai ngờ mình còn được gửi HEAD requests nữa.
