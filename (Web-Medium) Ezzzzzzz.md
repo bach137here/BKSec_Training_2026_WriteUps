@@ -35,4 +35,8 @@ Trong lúc test SQLi thì mình tự nhiên nảy ra ý tưởng đổi body th�
 ![[Pasted image 20261015234948.png]]
 
 Nhưng multipart thì vẫn nhận:
-![[Pasted image 20261015235116.png]]Mình thử chèn shell vào mà không cho
+![[Pasted image 20261015235116.png]]Mình thử upload file vào nhưng không được gì, nên bỏ qua hướng này.
+
+Mình thử decode cookie xem có gì không mà không thấy gì đặc biệt:
+![[Pasted image 20261016082949.png]]
+
