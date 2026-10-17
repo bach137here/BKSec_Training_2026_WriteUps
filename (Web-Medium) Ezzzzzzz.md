@@ -49,4 +49,8 @@ Mình thử test tiếp bằng cách gửi một OPTIONS request đến /, mình
 Nhưng cũng chẳng để làm gì ;-;
 Thế là mình quay sang dùng Param Miner trong Burp để quét thì phát hiện có 2 header lạ được ẩn đi:
 ![[Pasted image 20261018005252.png]]
+Mình test mãi ko biết 2 header này để làm gì, quyết định quay về test SQL injection tiếp:
 
+![[Pasted image 20261018011823.png]]
+
+Mình tự nhiên thấy ko bị lỗi 500 khi chèn OR 1=1 ảo thật. Mình đoán nó có gì đó trong /sort rồi.
