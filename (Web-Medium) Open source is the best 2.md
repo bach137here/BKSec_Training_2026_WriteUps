@@ -1,5 +1,11 @@
 
 
+---
+Tài liệu/Bài báo tham khảo:
+https://strobes.co/blog/understanding-next-js-vulnerability/
+
+---
+
 ![[Pasted image 20261017161655.png]]
 
 
@@ -28,4 +34,12 @@ Thế là mình thử nghịch nghịch bằng cách đổi Referer thành cái 
 
 Kết quả là vẫn vậy😑
 
+Sau đó mình search trên mạng thì không hiểu sao lướt trúng một CVE giống y hệt bài tập đang làm :)) ảo thật: https://strobes.co/blog/understanding-next-js-vulnerability/
 
+Mình chỉ đơn giản là thêm header  `X-Middleware-Subrequest: middleware:middleware:middleware:middleware:middleware` thì tự nhiên xem được tất cả dashboard:
+![[Pasted image 20261017172003.png]]
+
+![[Pasted image 20261017172010.png]]
+
+Mình đọc chú thích bên dưới và thử với id=1 thì đọc được profile luôn :)) và lấy được flag:
+![[Pasted image 20261017172213.png]]
