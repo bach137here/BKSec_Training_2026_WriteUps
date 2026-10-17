@@ -45,3 +45,8 @@ Mình thử test tiếp bằng cách gửi một OPTIONS request đến /, mình
 ![[Pasted image 20261016090011.png]]
 
 ![[Pasted image 20261016090015.png]]
+
+Nhưng cũng chẳng để làm gì ;-;
+Thế là mình quay sang dùng Param Miner trong Burp để quét thì phát hiện có 2 header lạ được ẩn đi:
+![[Pasted image 20261018005252.png]]
+
