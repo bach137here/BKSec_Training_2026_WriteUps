@@ -54,3 +54,26 @@ Mình test mãi ko biết 2 header này để làm gì, quyết định quay v�
 ![[Pasted image 20261018011823.png]]
 
 Mình tự nhiên thấy ko bị lỗi 500 khi chèn OR 1=1 ảo thật. Mình đoán nó có gì đó trong /sort rồi.
+
+Yeah và đúng như mình dự đoán, chỗ này có vẻ server đã truyền thẳng:
+```
+... ORDER BY <key>
+```
+để làm tính năng sắp xếp theo tên cột.
+
+Mình thử test xem đây là cơ sở dữ liệu gì bằng cách:
+![[Pasted image 20261020000547.png]]
+
+![[Pasted image 20261020000603.png]]
+
+Anh em có thể thấy, nếu gửi hàm version() vào thì lỗi còn gửi sqlite_version() lại được -> chắc chắn đây là sqlite.
+
+Mình thử test thêm:
+1=1:
+![[Pasted image 20261020000854.png]]
+
+1=2:
+![[Pasted image 20261020000906.png]]
+
+hehehehe, anh em có thể thấy nếu 1=1 thì TRUE sẽ ở trên đầu, còn 1=2 thì FALSE sẽ ở trên đầu -> SQL injection dạng Boolean-based
+
