@@ -1,3 +1,12 @@
+
+
+---
+Tài liệu/Bài báo tham khảo:
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLite%20Injection.md
+
+---
+
+
 ![[Pasted image 20261015225919.png]]
 
 Thêm sự kiện:
@@ -76,4 +85,5 @@ Mình thử test thêm:
 ![[Pasted image 20261020000906.png]]
 
 hehehehe, anh em có thể thấy nếu 1=1 thì TRUE sẽ ở trên đầu, còn 1=2 thì FALSE sẽ ở trên đầu -> SQL injection dạng Boolean-based
+
 
