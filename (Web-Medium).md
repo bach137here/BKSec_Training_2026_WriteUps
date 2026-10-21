@@ -111,3 +111,8 @@ Mình đăng nhập vào tài khoản vừa tạo và lấy được token:
 
 Mình đăng nhập thành công
 ![[Pasted image 20261021105017.png]]
+
+
+![[Pasted image 20261021105145.png]]
+
+Và từ đó mình thành công đọc được Flag.
