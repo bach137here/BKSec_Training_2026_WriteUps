@@ -17,9 +17,8 @@ mình đã thử các cách gian lận như:
 - Gửi nhiều attribute tên "amount" không được,...
 ![[Pasted image 20261022141505.png]]
 
+
 Sau đó mình có thử Race Condition bằng cách gửi một lúc 20 request nhưng có vẻ server handle đúng cách
-
-
 ![[Pasted image 20261022145543.png]]
 
 
