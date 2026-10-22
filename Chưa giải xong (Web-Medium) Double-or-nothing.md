@@ -27,4 +27,4 @@ Ngoài ra mình cũng thử gửi thập phân nhưng không thế nào lên đ�
 ![[Pasted image 20261022145853.png]]
 
 
-Đến đây mình nghĩ brute-force có vẻ không khả thi nên
+Đến đây mình nghĩ brute-force có vẻ không khả thi nên mình đã quay sang dùng ffuf dò tất cả các endpoint, endpoint API, query param, header,... nhưng đều không tìm thấy gì???
