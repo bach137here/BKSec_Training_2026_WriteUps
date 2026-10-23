@@ -1,6 +1,9 @@
 
 
 
+
+
+
 ![[Pasted image 20261020202523.png]]
 
 
@@ -22,4 +25,13 @@
 
 ![[Pasted image 20261020211725.png]]
 
+
+
+
+```python
+print("hello")
+```
+==sad==
+
+$e^x$
 
