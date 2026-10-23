@@ -28,10 +28,6 @@
 
 
 
-```python
-print("hello")
-```
-==sad==
+![[Pasted image 20261023110609.png]]
 
-$e^x$
 
