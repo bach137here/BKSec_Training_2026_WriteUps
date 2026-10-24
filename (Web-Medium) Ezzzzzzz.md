@@ -30,7 +30,7 @@ Mình dùng SQLMap kiểm tra xem có lỗ hỏng SQL injection ở đây không
 
 
 
-Mình test chức năng xóa, thấy một điều khá lạ là chuyển sang số 9 vẫn bị xóa event:
+Mình test chức năng xóa, thấy một điều khá lạ là chuyển sang số 9 vẫn bị xóa event trong khi mình mới chỉ tạo 2 events:
 ![[Pasted image 20261015231725.png]]
 
 
@@ -38,16 +38,20 @@ Mình tính test thêm SSTI ở chức năng add, trong lúc cho SSTI chạy th�
 ![[Pasted image 20261015233908.png]]
 ![[Pasted image 20261015233920.png]]
 
+
 Điều này giúp mình đặt ra nghi vấn có lẽ nào Param này liên quan tới một query SQL? -> Mình test thêm SQL injection ở đây. (Update lúc sau: Ko được)
 
 Trong lúc test SQLi thì mình tự nhiên nảy ra ý tưởng đổi body thành dạng json rồi tìm xem có phương án tấn công kiểu như Prototype Pollution được không nhưng không được:
 ![[Pasted image 20261015234948.png]]
 
+
 Nhưng multipart thì vẫn nhận:
 ![[Pasted image 20261015235116.png]]Mình thử upload file vào nhưng không được gì, nên bỏ qua hướng này.
 
+
 Mình thử decode cookie xem có gì không mà không thấy gì đặc biệt:
 ![[Pasted image 20261016082949.png]]
+ko có gì :(
 
 
 Mình thử test tiếp bằng cách gửi một OPTIONS request đến /, mình thấy còn được gửi HEAD requests nữa.
@@ -58,7 +62,7 @@ Mình thử test tiếp bằng cách gửi một OPTIONS request đến /, mình
 Nhưng cũng chẳng để làm gì ;-;
 Thế là mình quay sang dùng Param Miner trong Burp để quét thì phát hiện có 2 header lạ được ẩn đi:
 ![[Pasted image 20261018005252.png]]
-Mình test mãi ko biết 2 header này để làm gì, quyết định quay về test SQL injection tiếp:
+Mình test mãi ko biết 2 header này để làm gì, có vẻ là false positive, quyết định quay về test SQL injection tiếp:
 
 ![[Pasted image 20261018011823.png]]
 
@@ -75,7 +79,7 @@ Mình thử test xem đây là cơ sở dữ liệu gì bằng cách:
 
 ![[Pasted image 20261020000603.png]]
 
-Anh em có thể thấy, nếu gửi hàm version() vào thì lỗi còn gửi sqlite_version() lại được -> chắc chắn đây là sqlite.
+Anh em có thể thấy, nếu gửi hàm version() vào thì lỗi còn gửi sqlite_version() lại được -> đây là sqlite.
 
 Mình thử test thêm:
 1=1:

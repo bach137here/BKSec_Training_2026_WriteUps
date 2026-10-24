@@ -13,7 +13,7 @@ mình đã thử các cách gian lận như:
 - Gửi object... trong đó có payload NoSQL injection như `{"$ne"="..."}, {"$where"="..."},...`hay là prototype pollution như `{"__proto__"="..."}` tất cả đều khong được
 - Đổi định dạng body ko được
 - Gửi string dạng "1iyqweiuqwyeui7126474" thì có vẻ server ép kiểu ra 1, nhưng "1e3217489" lại không được -> chứng tỏ server ép số nguyên.
-- Gửi array kiểu [1] vẫn được bình thường, server chỉ quan tâm số đầu, ví dụ [1,4,1,56,7] -> coi như 1 nhưng gửi [9999,1,1,1,1] thì ko được
+- Gửi array kiểu [1] vẫn được bình thường, server chỉ quan tâm số đầu, ví dụ [1,4,1,56,7] -> coi như 1; nhưng gửi [9999,1,1,1,1] thì coi như 9999 nên ko được
 - Gửi nhiều attribute tên "amount" không được,...
 ![[Pasted image 20261022141505.png]]
 
@@ -27,3 +27,18 @@ Ngoài ra mình cũng thử gửi thập phân nhưng không thế nào lên đ�
 
 
 Đến đây mình nghĩ brute-force có vẻ không khả thi nên mình đã quay sang dùng ffuf dò tất cả các endpoint, endpoint API, query param, header,... nhưng đều không tìm thấy gì???
+
+
+Sau đó mình để ý thấy ở /api/status khá kì như sau:
+![[Pasted image 20261024185131.png]]
+
+Mình thấy kì kì, không hiểu sao lại có tận 2 trường nhỉ, mình không hiểu display nó là cái gì trong khi chỉ cần trả về coins là đủ rồi mà ??
+
+![[Pasted image 20261024185408.png]]
+
+Mình thấy màn hình vẫn hiện số thập phân mà??
+
+Thế là lúc này mình thử test Prototype Pollution thuộc tính 'display' hay 'coins' xem được không nhưng cũng chịu:))
+
+Mình nghĩ ở đây có một Logic flaw nào đó nhưng không thể nào tìm ra được 😭
+

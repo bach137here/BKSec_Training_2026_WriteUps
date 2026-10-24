@@ -54,11 +54,11 @@ Mình nhờ AI viết script nho nhỏ để check xem WAF chặn gì:
 Test thêm một lúc thì WAF dường như chỉ chặn ở tầng keyword. Mình exploit thành công sử dụng payload:
 `{{cycler|attr('\x5f\x5finit\x5f\x5f')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('o'+'s')|attr('po'+'pen')('<PAYLOAD>')|attr('read')()}}`
 
-Giải thích payload:
+**Giải thích payload:
 Để hiểu cơ chế thì bạn có thể tham khảo video này, giải thích cực kì dễ hiểu kaka: https://www.youtube.com/watch?v=SN6EVIG4c-0
-Nói đơn giản thì do WAF của app đã chặn lấy shell trực tiếp nên mình cần tìm cách nào đó để lấy shell một cách lươn lẹo bằng các gadget có sẵn kaka
+Nói đơn giản thì do WAF của app đã chặn lấy shell trực tiếp nên mình cần tìm cách nào đó để lấy shell một cách lươn lẹo bằng các gadget có sẵn kaka**
 
-- Cycler: Một class được import trong Jinja2, có rất nhiều lựa chọn khác nữa mọi người cứ test nhé, làm sao để đến được mấy cái nguy hiểm như `os`, `subprocess`, `__builtins__.__import__`, `__subclasses__`, `pty`... là được
+- Cycler: Một class được import trong Jinja2, ngoài Cycler có rất nhiều lựa chọn khác nữa mọi người cứ test nhé, làm sao để đến được mấy cái nguy hiểm như `os`, `subprocess`, `__builtins__.__import__`, `__subclasses__`, `pty`... là được
  ![[Pasted image 20261015210742.png]]
 ![[Pasted image 20261015211359.png]]
 
