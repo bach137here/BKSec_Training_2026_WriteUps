@@ -1,7 +1,5 @@
 
-
-
-
+Bài này mình mở ticket nhờ các
 
 
 ![[Pasted image 20261020202523.png]]
