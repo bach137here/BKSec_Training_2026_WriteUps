@@ -39,6 +39,8 @@ Thế là giờ mình chế được các script dạng như sau và đã redire
     
 ...
 Nhưng vấn đề là script-src là 'self' nên mình chưa nghĩ ra cách nào để đọc được cookie từ trang web.
+Mình để ý thêm thì thấy ở endpoint report.php không có CSP nhưng cũng ko lợi dụng được gì:
+![[Pasted image 20261023110609.png]]
 Lúc này bí quá, thử đủ mọi kiểu trên đời. AI nó còn bảo CSS injection hay HTML smuggling, DOM XSS gì ấy nhưng mình thấy con AI cứ ngáo ngáo, vòng vo nên mình ức chế vl :))) bí quá nên mình quyết định mở ticket nhờ mấy anh trong clb hỏi xem có lỗi/có endpoint ẩn hay gợi ý gì không.
 
 Thế là 2 anh mới bảo mình đọc: https://phrack.org/issues/72/the-art-of-php-my-ctf-journey-and-untold-stories_md rồi từ đó mình mới hiểu ra là phải kết hợp với điểm yếu của PHP nữa ảo thật:))
@@ -52,10 +54,17 @@ Sau đó thêm vào sau 'msg' như sau:
 
 ![[Pasted image 20261024225721.png]]
 
+Lúc này thì PHP sẽ ném ra một cái warning từ đó làm mất CSP:
+![[Pasted image 20261024225800.png]]
+
+Khi đó thì CSP trigger thành công !!!!:
+![[Pasted image 20261024225904.png]]
 
 
+Cơ chế hoạt động của nó đây nhé:
+![[Pasted image 20261024230056.png]]
 
+Ảo thật sự, mình rút ra bài học là phải chăm đọc hơn :))
 
-![[Pasted image 20261023110609.png]]
 
 
