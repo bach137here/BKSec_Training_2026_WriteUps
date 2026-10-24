@@ -20,7 +20,8 @@ Lúc này mình thấy server có một cái khá lạ - xóa 'script' trong pay
 Kết quả khi truyền scrscriptipt vào lại ra script :)) đến đây mình nghi nghi hướng này:
 ![[Pasted image 20261020211725.png]]
 
-Thế là giờ đa
+Thế là giờ mình chế được các script dạng như sau và đã redirect/ép bot gửi request về web
+
 
 
 
