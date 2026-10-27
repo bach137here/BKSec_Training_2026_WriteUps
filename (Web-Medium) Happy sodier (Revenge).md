@@ -7,11 +7,11 @@ https://www.php.net/manual/en/language.types.type-juggling.php
 ---
 
 
-![[Pasted image 20261017155229.png]]
+![Pasted image 20261017155229](Attachments/Pasted%20image%2020261017155229.png)
 Vẫn giống như challenge Happy sodier trước. Nhưng lần này mình đã khôn hơn và xem source đầu tiên :))
 
 Lần này cookie đã được kí đàng hoàng:
-![[Pasted image 20261017155409.png]]
+![Pasted image 20261017155409](Attachments/Pasted%20image%2020261017155409.png)
 
 Điều kiện thắng ở đây chắc chắn chỉ còn cách đọc được file /secret.txt và kí cookie. 
 Và để làm vậy thì hướng khả thi nhất có lẽ là sử dụng lỗ hỏng Insecure Deserialization:
@@ -64,7 +64,7 @@ Thế là mình craft ngay một cookie với chữ kí có dạng boolean=True:
 O:6:"Player":5:{s:6:"health";i:100;s:6:"attack";i:10;s:5:"coins";i:0;s:6:"weapon";s:12:"Golden Sword";s:3:"sig";b:1;}
 ```
 và dễ dàng lấy được flag:
-![[Pasted image 20261017160940.png]]
+![Pasted image 20261017160940](Attachments/Pasted%20image%2020261017160940.png)
 
 Giải thích Payload:
 Payload dựa trên lỗ hỏng PHP Type Juggling:
@@ -72,7 +72,7 @@ Payload dựa trên lỗ hỏng PHP Type Juggling:
 Khi sig(boolean)=true thì mọi string khác rỗng(ở đây là chữ kí đúng mà server giữ) sẽ bằng True:
 Tham khảo: https://www.php.net/manual/en/language.types.type-juggling.php
 
-![[Pasted image 20261017161337.png]]
+![Pasted image 20261017161337](Attachments/Pasted%20image%2020261017161337.png)
 
 Để dễ hình dung thì lúc này server sẽ so sánh kiểu:
 true == "aHR0cHM6Ly93d3cucGhwLm5ldC9tYW51YWwvZW4vbGFuZ3VhZ2UudHlwZXMudHlwZS1qdWdnbGluZy5waHAK" (chữ kí tượng trưng)

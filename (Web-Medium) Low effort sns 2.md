@@ -4,17 +4,17 @@
 Mình không hiểu sao đây là Medium nữa🤔
 
 Challenge đơn giản là một API có các route như sau:
-![[Pasted image 20261021103454.png]]
+![Pasted image 20261021103454](Attachments/Pasted%20image%2020261021103454.png)
 
-![[Pasted image 20261021103538.png]]
+![Pasted image 20261021103538](Attachments/Pasted%20image%2020261021103538.png)
 
 
 Bài tập có cung cấp source code, cấu trúc như sau:
-![[Pasted image 20261021103740.png]]
+![Pasted image 20261021103740](Attachments/Pasted%20image%2020261021103740.png)
 Challenge được viết bằng GO, cấu trúc code khá rõ ràng.
 
 Flag nằm ở trong secret của admin:
-![[Pasted image 20261021103917.png]]
+![Pasted image 20261021103917](Attachments/Pasted%20image%2020261021103917.png)
 
 Vậy để lấy flag thì mình nghĩ sẽ có 2 hướng chính chính là 
 - Đăng nhập được vào tài khoản Admin
@@ -87,7 +87,7 @@ Các bạn có thể thấy, ở đây thì server khá bất cẩn khi nhận l
 
 Mà như trong route các bạn đã biết, admin còn có một route cho phép đọc secret của mọi user chỉ cần thông qua id của họ -> Mình dễ dàng đọc được secret của admin từ đó đọc được Flag
 
-![[Pasted image 20261021104549.png]]
+![Pasted image 20261021104549](Attachments/Pasted%20image%2020261021104549.png)
 ```go
 func (h *SecretHandler) GetSecret(id string) (*model.Secret, error) {
 	secretResp := &model.Secret{Owner: id}
@@ -104,15 +104,15 @@ func (h *SecretHandler) GetSecret(id string) (*model.Secret, error) {
 **Solve**
 
 Đầu tiên mình đăng kí một tài khoản với role admin:
-![[Pasted image 20261021104754.png]]
+![Pasted image 20261021104754](Attachments/Pasted%20image%2020261021104754.png)
 
 Mình đăng nhập vào tài khoản vừa tạo và lấy được token:
-![[Pasted image 20261021104900.png]]
+![Pasted image 20261021104900](Attachments/Pasted%20image%2020261021104900.png)
 
 Mình đăng nhập thành công
-![[Pasted image 20261021105017.png]]
+![Pasted image 20261021105017](Attachments/Pasted%20image%2020261021105017.png)
 
 
-![[Pasted image 20261021105145.png]]
+![Pasted image 20261021105145](Attachments/Pasted%20image%2020261021105145.png)
 
 Và từ đó mình thành công đọc được Flag.

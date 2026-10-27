@@ -6,10 +6,10 @@ Tài liệu/Bài báo tham khảo:
 
 ---
 
-![[Pasted image 20261014142206.png]]
+![Pasted image 20261014142206](Attachments/Pasted%20image%2020261014142206.png)
 
 Mình cần đạt số điểm 999 trong game này.
-![[Pasted image 20261014144518.png]]
+![Pasted image 20261014144518](Attachments/Pasted%20image%2020261014144518.png)
 Cơ chế đơn giản là mình sẽ gửi GET request đến server dự đoán của mình là chẵn hay lẻ thì server sẽ xem xét mình có đúng không:
 - Nếu đúng: x2 số tiền
 - Nếu sai: Mất số tiền đã cược
@@ -210,4 +210,4 @@ if __name__ == "__main__":
 ```
 
 Sau 132 lần thì mình lấy FLAG thành công 😀 
-![[Pasted image 20261014152857.png]]
+![Pasted image 20261014152857](Attachments/Pasted%20image%2020261014152857.png)
