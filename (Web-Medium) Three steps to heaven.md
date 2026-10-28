@@ -224,3 +224,4 @@ Mình lướt thử ở Hacktricks thì thấy có một vài cái payload khá 
 ![[Attachments/Pasted image 20261028112900.png]]
 
 
+Mình slop AI thì nó ném cho mình một script để có thể 
