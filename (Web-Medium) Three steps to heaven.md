@@ -3,6 +3,8 @@
 ---
 Tài liệu/Bài báo tham khảo:
 https://hacktricks.wiki/en/pentesting-web/file-inclusion/index.html
+https://hacktricks.wiki/en/pentesting-web/file-inclusion/phar-deserialization.html
+https://hacktricks.wiki/en/network-services-pentesting/pentesting-web/php-tricks-esp/php-useful-functions-disable_functions-open_basedir-bypass/disable_functions-bypass-dl-function.html
 
 ---
 
@@ -235,3 +237,17 @@ Và buồn thay cách này ko được:)) mình quên mất là chỉ được i
 ![[Attachments/Pasted image 20261028212252.png]]
 
 Thế là mình thử sửa đoạn này chút thành test.php sau đó test lại:
+![[Attachments/Pasted image 20261028212519.png]]
+
+Yayyyyy, thế là mình RCE thành công!!!!
+Nhưng mà server đã chặn system() 😭😭😭
+
+Mình thử nhiều hàm khác thì chỉ file_get_contents() hoạt động... Và làm vậy mình đã đọc được flag ở challenge cho phép hướng unintended:
+![[Attachments/Pasted image 20261028212825.png]]
+
+Nhưng đến Revenge thì đã không còn /flag.txt nên mình bắt buộc phải có RCE thật sự:
+![[Attachments/Pasted image 20261028212900.png]]
+
+Thế là mình đã slop AI ra script RCE, lúc sau tìm hiểu thì mới hiểu cơ chế của phương pháp này:
+![[Attachments/Pasted image 20261028213259.png]]
+
