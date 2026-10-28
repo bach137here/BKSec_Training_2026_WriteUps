@@ -224,4 +224,14 @@ Mình lướt thử ở Hacktricks thì thấy có một vài cái payload khá 
 ![[Attachments/Pasted image 20261028112900.png]]
 
 
-Mình slop AI thì nó ném cho mình một script để có thể 
+Mình bật chế độ script kiddie và copy một script trên đó về tạo payload:
+![[Attachments/Pasted image 20261028211001.png]]
+
+Mình compile ra và đổi payload thành đuôi file ảnh, do mình hỏi AI thì nó bảo phar:// không quan tâm đuôi file mà chỉ quan tâm nội dung bên trong:
+![[Attachments/Pasted image 20261028211249.png]]
+
+Và buồn thay cách này ko được:)) mình quên mất là chỉ được include đuôi file .php:D
+
+![[Attachments/Pasted image 20261028212252.png]]
+
+Thế là mình thử sửa đoạn này chút thành test.php sau đó test lại:
