@@ -2,7 +2,7 @@
 
 ---
 Tài liệu/Bài báo tham khảo:
-
+https://hacktricks.wiki/en/pentesting-web/file-inclusion/index.html
 
 ---
 
@@ -195,5 +195,28 @@ Mình cũng thử Fuzz các fileName dạng:
 - `abc.php<FUZZ>.png`
 - `abc.php<FUZZ>abc.png`
 
-Nhưng đều không được. Thế là mình nghĩ đến việc upload file .htaccess để có thể chỉnh cấu hình server cho phép coi một đuôi file
+Nhưng đều không được. Thế là mình nghĩ đến việc upload file .htaccess để có thể chỉnh cấu hình server cho phép coi một đuôi file ảnh có thể execute:
 
+```htaccess
+AddType application/x-httpd-php .png
+```
+
+Nhưng cái khó ở đây là mặc dù server không cấm .htaccess nhưng server yêu cầu đuôi file phải là ảnh bằng regex. Dẫn đến việc upload cực khó.
+![[Attachments/Pasted image 20261028111714.png]]
+
+Mình nhập filename là .htaccess%00.png thì được, nhưng sau đó mình không xem được file .htaccess của server:
+![[Attachments/Pasted image 20261028111929.png]]
+Mình cũng đã thử đọc .htaccess bằng LFI nhưng có điều server chỉ cho đọc file .php nên không được.
+
+Nhưng mình vẫn thử upload file payload.png với nội dung
+`<?php system('id') ?>`
+
+Nhưng server vẫn chỉ coi đó là file ảnh và không execute được:
+![[Attachments/Pasted image 20261028112355.png]]
+![[Attachments/Pasted image 20261028112440.png]]
+
+Chứng tỏ .htaccess của mình chưa được upload thành công ?
+
+Thế là mình quyết định chuyển sang hướng đi khác, lúc này mình mới nhớ lại nãy mình có bắt gặp LFI, không biết mình có thể kết hợp nó với File upload để làm điều gì đó không?
+
+![[Attachments/Pasted image 20261028112900.png]]
