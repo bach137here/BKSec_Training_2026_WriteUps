@@ -214,9 +214,13 @@ Nhưng mình vẫn thử upload file payload.png với nội dung
 Nhưng server vẫn chỉ coi đó là file ảnh và không execute được:
 ![[Attachments/Pasted image 20261028112355.png]]
 ![[Attachments/Pasted image 20261028112440.png]]
-
 Chứng tỏ .htaccess của mình chưa được upload thành công ?
 
-Thế là mình quyết định chuyển sang hướng đi khác, lúc này mình mới nhớ lại nãy mình có bắt gặp LFI, không biết mình có thể kết hợp nó với File upload để làm điều gì đó không?
+Thế là mình quyết định chuyển sang hướng đi khác, lúc này mình mới nhớ lại nãy mình có bắt gặp LFI, mình nghĩ không biết mình có thể kết hợp nó với File upload để làm điều gì đó không?
+
+Mình lướt thử ở Hacktricks thì thấy có một vài cái payload khá thú vị sử dùng input://, expect://,.. mình đã thử hết và đến phar:// thì có tiến triển:
+![[Attachments/Pasted image 20261028204734.png|636]]
 
 ![[Attachments/Pasted image 20261028112900.png]]
+
+
