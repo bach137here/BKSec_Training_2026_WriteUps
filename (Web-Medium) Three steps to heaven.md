@@ -164,5 +164,36 @@ và thành công đăng nhập được:
 
 Khi đăng nhập thành công thì có một trang Apply với chức năng Upload avatar:
 ![[Attachments/Pasted image 20261028105911.png]]
+![[Attachments/Pasted image 20261028110349.png]]
 
+
+Nhìn vào source code ta có thể thấy server validate file được upload lên như sau:
+```php
+$target_dir = "./user_submissions/";
+    $fileName = basename($_FILES["uploadFile"]["name"]);
+    $target_file = $target_dir . $fileName;
+
+    if (strpos($fileName, '.php') !== false) {
+        echo "Extension not allowed";
+        die();
+    }
+
+    if (!preg_match('/^.*\.(jpg|jpeg|png|gif)$/', $fileName)) {
+        echo "Only images are allowed";
+        die();
+    }
+```
+- File được upload vào thư mục ./user_submissions
+- File không được có đuôi .php
+- Dùng regex và kiểm tra xem tên file có `.<extension ảnh>` trong đó không
+
+Đến đây thì mình thử áp dụng một số cái trick như kiểu thêm Null Byte:
+- abc.php%00.png
+Có nhiều extension:
+- abc.php.png 
+Mình cũng thử Fuzz các fileName dạng:
+- `abc.php<FUZZ>.png`
+- `abc.php<FUZZ>abc.png`
+
+Nhưng đều không được. Thế là mình nghĩ đến việc upload file .htaccess để có thể chỉnh cấu hình server cho phép coi một đuôi file
 
