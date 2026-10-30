@@ -34,3 +34,7 @@ Thì thấy uầy sao giống y bài mình đang làm luôn, thế là mình clo
 Và mình thành công luôn :)) RCE:
 
 ![[Attachments/Pasted image 20261030224052.png]]
+
+Link PoC mình dùng ở đây: https://raw.githubusercontent.com/nehkark/CVE-2025-55182/refs/heads/main/poc-cve-2025-55182.py
+
+Mình có đọc qua PoC thì thấy khá phức tạp, mình 
