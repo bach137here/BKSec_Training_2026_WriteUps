@@ -97,6 +97,7 @@ mà mình gửi. Lúc này DNS trả về ip VPS của mình, bot load được 
 Đoạn mã Javascript trên server của mình liên tục fetch nội dung trang chính nó rồi gửi nội dung về RequestRepo (Trang bắt request tương tự webhook).
 
 Bản chất cách này bypass được SOP vì khi TTL của bản ghi địa chỉ IP trả về từ http://make-104.64.219.249-rebindfor10safter2times-127.0.0.1-rr.1u.ms:9090/ thay đổi liên tục, mà trong mã Javascript của mình thì cứ 1s sẽ lại gửi về server nội dung trang. Nếu đúng lúc DNS trả về 127.0.0.1 thì ngon luôn, lúc này nó biến thành 127.0.0.1:9090/admin -> mình đọc được nội dung của /admin; do là SOP đối chiếu Host hiện tại với URL trong fetch() -> thấy giống (URL vẫn vậy, chỉ bản ghi IPv4 trả về là khác) nên thành công.
+![[Attachments/Pasted image 20261101150452.png]]
 
 Tưởng  vậy là đã xong nhưng mình test mãi mà ko hiểu sao chỉ xem được nội dung của chính trang được host trên VPS của mình. Khá cay cú 😠
 
