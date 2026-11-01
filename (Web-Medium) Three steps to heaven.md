@@ -12,28 +12,28 @@ https://hacktricks.wiki/en/network-services-pentesting/pentesting-web/php-tricks
 
 Nhìn vào giao diện của trang web mình quan sát thấy có 2 nút chuyển hướng là "Join us" và "Login", khi ấn vào thì luôn trỏ đến /?page=login.php
 
-![[Attachments/Pasted image 20261028103624.png]]
+![Pasted image 20261028103624](Attachments/Pasted%20image%2020261028103624.png)
 
 
 Mình thử SQL injection thì thấy:
-![[Attachments/Pasted image 20261028103719.png]]
+![Pasted image 20261028103719](Attachments/Pasted%20image%2020261028103719.png)
 
 Sau đó mình FUZZ một lúc thì cũng chẳng thấy gì đặc biệt. Mình nghĩ có thể là Error-based hay gì đó nhưng không thấy gì đặc biệt nên tạm thời đi theo hướng khác trước.
 
 
 Như nãy mình có nhắc đến /?page=login.php á. Mình thấy cái này khá dị, chắc hẳn cách setup này có liên quan đến một lỗ hỏng nào đó nên mình thử đôi /?page=random, random.php xem:
 
-![[Attachments/Pasted image 20261028104023.png]]
+![Pasted image 20261028104023](Attachments/Pasted%20image%2020261028104023.png)
 
 Hehe, màn hình hiện ra một thông báo lỗi. Mình thấy ngay đây là lỗ hỏng LFI.
 
 Dựa vào một cái trick trên Hacktricks thì mình thành công leak được source code của app:
-![[Attachments/Pasted image 20261028104407.png|423]]
+![423](Attachments/Pasted%20image%2020261028104407.png)
 
 ```
 /?page=php://filter/convert.base64-encode/resource=index.php
 ```
-![[Attachments/Pasted image 20261028104814.png]]
+![Pasted image 20261028104814](Attachments/Pasted%20image%2020261028104814.png)
 
 
 Decode ra thì ta đọc được source code của các endpoint như sau:
@@ -165,8 +165,8 @@ và thành công đăng nhập được:
 
 
 Khi đăng nhập thành công thì có một trang Apply với chức năng Upload avatar:
-![[Attachments/Pasted image 20261028105911.png]]
-![[Attachments/Pasted image 20261028110349.png]]
+![Pasted image 20261028105911](Attachments/Pasted%20image%2020261028105911.png)
+![Pasted image 20261028110349](Attachments/Pasted%20image%2020261028110349.png)
 
 
 Nhìn vào source code ta có thể thấy server validate file được upload lên như sau:
@@ -204,52 +204,52 @@ AddType application/x-httpd-php .png
 ```
 
 Nhưng cái khó ở đây là mặc dù server không cấm .htaccess nhưng server yêu cầu đuôi file phải là ảnh bằng regex. Dẫn đến việc upload cực khó.
-![[Attachments/Pasted image 20261028111714.png]]
+![Pasted image 20261028111714](Attachments/Pasted%20image%2020261028111714.png)
 
 Mình nhập filename là .htaccess%00.png thì được, nhưng sau đó mình không xem được file .htaccess của server:
-![[Attachments/Pasted image 20261028111929.png]]
+![Pasted image 20261028111929](Attachments/Pasted%20image%2020261028111929.png)
 Mình cũng đã thử đọc .htaccess bằng LFI nhưng có điều server chỉ cho đọc file .php nên không được.
 
 Nhưng mình vẫn thử upload file payload.png với nội dung
 `<?php system('id') ?>`
 
 Nhưng server vẫn chỉ coi đó là file ảnh và không execute được:
-![[Attachments/Pasted image 20261028112355.png]]
-![[Attachments/Pasted image 20261028112440.png]]
+![Pasted image 20261028112355](Attachments/Pasted%20image%2020261028112355.png)
+![Pasted image 20261028112440](Attachments/Pasted%20image%2020261028112440.png)
 Chứng tỏ .htaccess của mình chưa được upload thành công ?
 
 Thế là mình quyết định chuyển sang hướng đi khác, lúc này mình mới nhớ lại nãy mình có bắt gặp LFI, mình nghĩ không biết mình có thể kết hợp nó với File upload để làm điều gì đó không?
 
 Mình lướt thử ở Hacktricks thì thấy có một vài cái payload khá thú vị sử dùng input://, expect://,.. mình đã thử hết và đến phar:// thì có tiến triển:
-![[Attachments/Pasted image 20261028204734.png|636]]
+![636](Attachments/Pasted%20image%2020261028204734.png)
 
-![[Attachments/Pasted image 20261028112900.png]]
+![Pasted image 20261028112900](Attachments/Pasted%20image%2020261028112900.png)
 
 
 Mình bật chế độ script kiddie và copy một script trên đó về tạo payload:
-![[Attachments/Pasted image 20261028211001.png]]
+![Pasted image 20261028211001](Attachments/Pasted%20image%2020261028211001.png)
 
 Mình compile ra và đổi payload thành đuôi file ảnh, do mình hỏi AI thì nó bảo phar:// không quan tâm đuôi file mà chỉ quan tâm nội dung bên trong:
-![[Attachments/Pasted image 20261028211249.png]]
+![Pasted image 20261028211249](Attachments/Pasted%20image%2020261028211249.png)
 
 Và buồn thay cách này ko được:)) mình quên mất là chỉ được include đuôi file .php:D
 
-![[Attachments/Pasted image 20261028212252.png]]
+![Pasted image 20261028212252](Attachments/Pasted%20image%2020261028212252.png)
 
 Thế là mình thử sửa đoạn này chút thành test.php sau đó test lại:
-![[Attachments/Pasted image 20261028212519.png]]
+![Pasted image 20261028212519](Attachments/Pasted%20image%2020261028212519.png)
 
 Yayyyyy, thế là mình RCE thành công!!!!
 Nhưng mà server đã chặn system() 😭😭😭
 
 Mình thử nhiều hàm khác thì chỉ file_get_contents() hoạt động... Và làm vậy mình đã đọc được flag ở challenge cho phép hướng unintended:
-![[Attachments/Pasted image 20261028212825.png]]
+![Pasted image 20261028212825](Attachments/Pasted%20image%2020261028212825.png)
 
 Nhưng đến Revenge thì đã không còn /flag.txt nên mình bắt buộc phải có RCE thật sự:
-![[Attachments/Pasted image 20261028212900.png]]
+![Pasted image 20261028212900](Attachments/Pasted%20image%2020261028212900.png)
 
 Mình đã thử mọi loại hàm có thể giúp RCE trên đời nhưng không thể nào RCE được 💔 mình nản quá nên quyết định slop bằng AI agent tạo ra một PoC sử dụng kĩ thuật Mem-patch mà mình chỉ hiểu được nguyên lý chứ không hiểu code như thế nào;-;
-Các bạn có thể đọc giải thích của AI agent ở đây nhé [[Slop mem patch with AI agent]]
+Các bạn có thể đọc giải thích của AI agent ở đây nhé [Slop mem patch with AI agent](Slop%20mem%20patch%20with%20AI%20agent.md)
 
 PoC:
 

