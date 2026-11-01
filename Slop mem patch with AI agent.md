@@ -1,6 +1,6 @@
-mong CLB ko tẩy chay em vì đã slop nhé 💔
+mong CLB tha thứ 💔
 
-```AI agent's answer
+```Slop
 
 1. Vì sao cần mem patch?
 Sau khi upload PHAR và dùng LFI phar://..., mình có PHP code execution (eval), nhưng các hàm chạy lệnh bị chặn:
