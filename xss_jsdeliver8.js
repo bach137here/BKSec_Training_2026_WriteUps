@@ -11,7 +11,8 @@
     const r = await fetch('/post-comment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'comment-author=test' + txt + '&comment2=test' + secret
+      body: 'comment-author=test' + encodeURIComponent(txt) +
+            '&comment2=test' + encodeURIComponent(secret)
     });
   }
 })();
