@@ -1,5 +1,5 @@
 (async () => {
-  for (let id = 1; id <= 5; id++) {
+  for (let id = 1; id <= 30; id++) {
     const txt = await fetch('/check-resolve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
