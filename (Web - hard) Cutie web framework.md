@@ -32,5 +32,12 @@ Ví dụ mình muốn truy cập /auth/login thì sẽ phải vào /admin/auth/l
 Ứng dụng SELECT 2 trường username và role từ users. Mình hoàn toàn có thể chèn payload query tùy ý qua orderBy.
 
 https://elysiajs.com/plugins/graphql-yoga
-Mình thử query qua đây:
+Mình thử query qua đây endpoint /graphql:
 
+![[Attachments/Pasted image 20261113222644.png]]
+
+
+![[Attachments/Pasted image 20261113223059.png]]
+
+
+Lúc này mình thử chèn payload lấy mật khẩu:
