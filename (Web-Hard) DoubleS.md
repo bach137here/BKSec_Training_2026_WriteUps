@@ -60,45 +60,36 @@ hoặc nếu muốn đổi gió có thể dùng các hàm replace có sẵn hay 
 Điều bất thường ở đây là ứng dụng đang chạy một vòng lặp While để kiểm tra liên tục xem còn chỗ nào có { ... } không thì cứ tiếp tục thay vào:
 
 ```python
-        while self.placeholders:
-
-            current_key = self.placeholders[0]
-
-            replacement_map = dict.fromkeys(
-
-                self.placeholders,
-
-                lambda _, key: f"{{{key}}}"
-
-            )
-
-            for placeholder_key in self.placeholders:
-
-                if placeholder_key in self.validators:
-
-                    if current_key == placeholder_key:
-
-                        replacement_map[placeholder_key] = self.validators[placeholder_key].get_validated_value()
-
-                else:
-
-                    replacement_map[placeholder_key] = InputValidator
-
-            query = query.format_map(
-
-                type('FormatDict', (), {
-
-                    '__getitem__': lambda _, key: (
-
-                        replacement_map[key] if isinstance(replacement_map[key], str)
-
-                        else replacement_map[key]("", key)
-
-                    )
-
-                })()
-
-            )
+    def build_query(self):
+        """Build the final SQL query by replacing placeholders."""
+        query = self.template
+        self.placeholders = self.extract_placeholders(query)
+        
+        while self.placeholders:
+            current_key = self.placeholders[0]
+            replacement_map = dict.fromkeys(
+                self.placeholders, 
+                lambda _, key: f"{{{key}}}"
+            )
+            
+            for placeholder_key in self.placeholders:
+                if placeholder_key in self.validators:
+                    if current_key == placeholder_key:
+                        replacement_map[placeholder_key] = self.validators[placeholder_key].get_validated_value()
+                else:
+                    replacement_map[placeholder_key] = InputValidator
+                    
+            query = query.format_map(
+                type('FormatDict', (), {
+                    '__getitem__': lambda _, key: (
+                        replacement_map[key] if isinstance(replacement_map[key], str) 
+                        else replacement_map[key]("", key)
+                    )
+                })()
+            )
+            
+            self.placeholders = self.extract_placeholders(query)
+            
 ```
 
 Để cho các bạn dễ hình dung thì giả sử mình nhập vào form đăng nhập một cách dị dị như kiểu:
@@ -119,37 +110,48 @@ Thì từ:
 Sau đó, khi thấy vẫn còn placeholder dạng { ... } thì lại chạy tiếp vòng lặp và do không có value tương ứng nên sẽ gán thành rỗng và query trở thành:
 ![[Attachments/Pasted image 20261118233521.png|700]]
 
-Thật ra cái này trông có vẻ vô hại thật, vì chúng ta chưa thể kiểm soát được giá trị sẽ thay thế tương ứng,... hoặc là có thể ?
+Thật ra cái này trông có vẻ vô hại thật, vì chúng ta chưa thể kiểm soát được giá trị sẽ thay thế tương ứng,... hoặc là... có thể!?
 
 Nhìn lại Logic vòng While một chút, trong đoạn này:
 ```python
 for placeholder_key in self.placeholders:
-
-                if placeholder_key in self.validators:
-
-                    if current_key == placeholder_key:
-
-                        replacement_map[placeholder_key] = self.validators[placeholder_key].get_validated_value()
-
-                else:
-
-                    replacement_map[placeholder_key] = InputValidator
-
-            query = query.format_map(
-
-                type('FormatDict', (), {
-
-                    '__getitem__': lambda _, key: (
-
-                        replacement_map[key] if isinstance(replacement_map[key], str)
-
-                        else replacement_map[key]("", key)
-
-                    )
-
-                })()
-
-            )
-
-            self.placeholders = self.extract_placeholders(query)
+                if placeholder_key in self.validators:
+                    if current_key == placeholder_key:
+                        replacement_map[placeholder_key] = self.validators[placeholder_key].get_validated_value()
+                else:
+                    replacement_map[placeholder_key] = InputValidator
+                    
+            query = query.format_map(
+                type('FormatDict', (), {
+                    '__getitem__': lambda _, key: (
+                        replacement_map[key] if isinstance(replacement_map[key], str) 
+                        else replacement_map[key]("", key)
+                    )
+                })()
+            )
+            
+            self.placeholders = self.extract_placeholders(query)
 ```
+
+Logic của nó kiểu:
+*Nếu có key nào đầu vào trùng với placeholder đang có trong query => Thay giá trị ứng với key đó vào*
+
+*Nếu không =>  Gán value ứng với key đó thành object InputValidator !?*
+
+*Với map vừa tạo được dùng str.format_map() để thay thế*
+
+Tìm hiểu thêm về str.format_map(), ta thấy nó có cơ chế tương tự với str.format():
+Bạn đọc thêm ở: https://www.programiz.com/python-programming/methods/string/format_map
+![[Attachments/Pasted image 20261118234707.png]]
+![[Attachments/Pasted image 20261118234815.png]]
+
+Tìm hiểu về str.format() ta có thể thấy hàm này có một vài tính năng rất thú vị và đáng để tìm hiểu:
+Bạn đọc thêm tại: https://docs.python.org/3/library/string.html
+
+![[Attachments/Pasted image 20261118235152.png]]
+
+Nhìn thì phức tạp nhưng bạn có thể xem phần ví dụ bên dưới:
+![[Attachments/Pasted image 20261118235232.png]]
+
+Bạn có thể thấy, thật tuyệt vời khi chúng ta có thể làm một vài điều khá thù vị như kiểu truy cập attribute,  gọi các hàm str(), repr
+
