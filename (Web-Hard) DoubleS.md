@@ -10,4 +10,16 @@ Mình giải challenge này bằng cách kết hợp nhiều lỗ hỏng khác n
 
 # 1. Reconnaissance!!
 
-Mình thử mở 
+Mình thử spawn Instance mà recon qua thì dường như challenge chỉ có một chức năng duy nhất là đăng nhập:
+Nếu đăng nhập sai thì sẽ trả về 'Invalid Credentials':
+![[Attachments/Pasted image 20261118222452.png]]
+
+Nếu có kí tự lạ thì sẽ trả về thông báo cấm:
+![[Attachments/Pasted image 20261118222649.png]]
+
+Mình xem đến source code:
+Đầu tiên là **Dockerfile**, mình thấy các setup thông thường, flag được để ở /root/flag.txt, quyền 400 nên chỉ root được đọc:
+![[Attachments/Pasted image 20261118222917.png]]
+
+
+
