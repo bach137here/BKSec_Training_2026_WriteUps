@@ -238,10 +238,20 @@ Quá đã!!! Càng ngày càng gần với Flag rồi!!
 
 Vấn đề đặt ra bây giờ là flag đang được giấu tên file nên mình không thể nào đọc được flag mà không có RCE được (hoặc là do mình chưa nghĩ ra cách nào khác) nên giờ lại phải tìm cách nâng lên RCE 😭
 
+Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là vẫn dựa vào cái cách bypass lúc nãy để có thể 'leo' từ object InputValidator có được lên các hàm nguy hiểm để thực thi mã độc như ý tưởng đã có giống SSTI kiểu: 
+```
+{a}{a.}
+```
+đúng không? Mình cũng nghĩ vậy 
+
+(Để hiểu hơn về payload trên bạn có thể đọc tại: https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html)
+
 Lúc này nhờ AI thì mình mới nhận ra một điểm là ở phần chèn thư viện có 2 thư viện chèn mà không được dùng tí nào:
 ![[Attachments/Pasted image 20261119003635.png]]
 
 Trong đó có cái ctypes cực kì đáng nghi :)) ngay phần cảnh báo trên đầu của doc cũng nói luôn:
+Bạn đọc thêm tại: https://docs.python.org/3/library/ctypes.html
 ![[Attachments/Pasted image 20261119003737.png]]
 
 
+Trong thư viện này có một hàm cho phép load một shared library tùy ý vào
