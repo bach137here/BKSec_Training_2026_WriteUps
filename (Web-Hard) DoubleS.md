@@ -238,11 +238,12 @@ Quá đã!!! Càng ngày càng gần với Flag rồi!!
 
 Vấn đề đặt ra bây giờ là flag đang được giấu tên file nên mình không thể nào đọc được flag mà không có RCE được (hoặc là do mình chưa nghĩ ra cách nào khác) nên giờ lại phải tìm cách nâng lên RCE 😭
 
-Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là vẫn dựa vào cái cách bypass lúc nãy để có thể 'leo' từ object InputValidator có được lên các hàm nguy hiểm để thực thi mã độc như ý tưởng đã có giống SSTI kiểu: 
+Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là vẫn dựa vào cái cách bypass lúc nãy để có thể 'leo' để có được lên các hàm nguy hiểm để thực thi mã độc như ý tưởng đã có giống SSTI bằng các payload cực kì sáng tạo kiểu: 
 ```
-{a}{a.}
+username : {password.__init__.__globals__[os].popen('cat /flag_*').read()}
+password : abc
 ```
-đúng không? Mình cũng nghĩ vậy 
+đúng không? Mình cũng nghĩ vậy... Nhưng mình thử thì không thấy gì được in ra terminal của server và không cả có log Executing query.... không hiểu 
 
 (Để hiểu hơn về payload trên bạn có thể đọc tại: https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html)
 
