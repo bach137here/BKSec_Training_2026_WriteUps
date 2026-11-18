@@ -153,5 +153,18 @@ Bạn đọc thêm tại: https://docs.python.org/3/library/string.html
 Nhìn thì phức tạp nhưng bạn có thể xem phần ví dụ bên dưới:
 ![[Attachments/Pasted image 20261118235232.png]]
 
-Bạn có thể thấy, thật tuyệt vời khi chúng ta có thể làm một vài điều khá thù vị như kiểu truy cập attribute,  gọi các hàm str(), repr
+Bạn có thể thấy, thật tuyệt vời khi chúng ta có thể làm một vài điều khá thù vị như kiểu truy cập attribute, gọi các hàm str(), repr(),.. của object.
+
+Điều này không khác gì mỏ vàng vì kết hợp với phân tích ở trước, chúng ta có thể bypass hoàn toàn bộ lọc bằng cách dùng chính list **FORBIDDEN_CHARACTERS** trong class **Input Validator** để bypass và chèn được kí tự bị cấm vào query của mình, và có được lỗ hỏng đầu tiên - ***SQL injection***:
+
+Payload:
+username : admin
+password : `
+`{a}{a.FORBIDDEN_CHARACTERS[5]}{a.FORBIDDEN_CHARACTERS[3]}OR{a.FORBIDDEN_CHARACTERS[3]}1=1{a.FORBIDDEN_CHARACTERS[3]}{a.FORBIDDEN_CHARACTERS[10]}{a.FORBIDDEN_CHARACTERS[10]}{a.FORBIDDEN_CHARACTERS[3]}{a.FORBIDDEN_CHARACTERS[10]}`
+
+(Sau khi vòng While chạy xong thì password sẽ thành` ' OR 1=1 -- -`)
+
+![[Attachments/Pasted image 20261119000522.png]]
+
+Tuyệt vời!!! Mình đã đăng nhập được với tài khoản admin mặc dù vào thì chỉ hiện ra trang 404 nhưng cũng đã giúp mình xác nhận được SQL injection !!
 
