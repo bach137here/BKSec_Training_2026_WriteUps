@@ -6,7 +6,7 @@
 # TL;DR
 
 Mình giải challenge này bằng cách kết hợp nhiều lỗ hỏng khác nhau, mỗi lỗ hỏng lại mở ra nhiều điều thú vị để mình khám phá. Bắt đầu từ 
-**Business Logic Flaws -> SQL injection + Python Format String Gadget -> Arbitrary file write/read  -> Remote Code Execution** 
+**Business Logic Flaws -> SQL injection + Python Format String Gadget -> Arbitrary file write/read  -> Remote Code Execution 😳** 
 
 # 1. Reconnaissance!!
 
@@ -221,5 +221,27 @@ password :
 ![[Attachments/Pasted image 20261119002042.png]]
 
 Ồ, vậy là có đọc file rồi, giờ thì mình thử viết file xem sao nhỉ?
+**Payload:**
+username : admin
+password : 
+```
+x' AND 1=0 UNION SELECT 'Hello World!!!','','' INTO DUMPFILE '/var/run/mysqld/hehe.txt'-- -
+```
+
+Sau đó thử đọc file:
+```
+x' UNION SELECT 1,EXTRACTVALUE(1,CONCAT(0x7e,LOAD_FILE('/var/run/mysqld/hehe.txt'),0x7e)),3-- -
+```
+![[Attachments/Pasted image 20261119002717.png]]
+
+Quá đã!!! Càng ngày càng gần với Flag rồi!!
+
+Vấn đề đặt ra bây giờ là flag đang được giấu tên file nên mình không thể nào đọc được flag mà không có RCE được (hoặc là do mình chưa nghĩ ra cách nào khác) nên giờ lại phải tìm cách nâng lên RCE 😭
+
+Lúc này nhờ AI thì mình mới nhận ra một điểm là ở phần chèn thư viện có 2 thư viện chèn mà không được dùng tí nào:
+![[Attachments/Pasted image 20261119003635.png]]
+
+Trong đó có cái ctypes cực kì đáng nghi :)) ngay phần cảnh báo trên đầu của doc cũng nói luôn:
+![[Attachments/Pasted image 20261119003737.png]]
 
 
