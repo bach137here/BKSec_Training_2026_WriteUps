@@ -21,5 +21,10 @@ Mình xem đến source code:
 Đầu tiên là **Dockerfile**, mình thấy các setup thông thường, flag được để ở /root/flag.txt, quyền 400 nên chỉ root được đọc:
 ![[Attachments/Pasted image 20261118222917.png]]
 
+Chuyển sang **start.sh**:
+![[Attachments/Pasted image 20261118224117.png]]
+
+Logic của app được thể hiện trong **app.py**:
+![[Attachments/2026-11-18_22-46.png]]
 
 
