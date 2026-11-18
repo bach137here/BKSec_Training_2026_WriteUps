@@ -243,7 +243,7 @@ Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là v�
 username : { password.__class__.mro()[1].__subclasses__()[396]('echo HIII',shell=True,stdout=-1).communicate()[0].strip() }
 password : abc
 ```
-đúng không? Mình cũng nghĩ vậy... Nhưng đáng tiếc là format_map() sẽ không thể truy cập đến hàm mà sẽ luôn coi cái đang được hướng tới là một attribute:
+đúng không? Mình cũng nghĩ vậy... Nhưng đáng tiếc là format_map() sẽ không thể truy cập đến method mà sẽ luôn coi cái đang được hướng tới là một attribute:
 ![[Attachments/Pasted image 20261119015154.png]]
 (Để hiểu hơn về payload trên bạn có thể đọc tại: https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html)
 
