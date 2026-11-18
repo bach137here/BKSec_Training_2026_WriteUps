@@ -51,5 +51,105 @@ Bình thường nếu một dev bình thường muốn code để thay thế t�
 thành
 
 ```
+"SELECT * FROM users WHERE username = '<user input>' AND password = '<user input>'"
+```
+
+thì chỉ cần đơn giản là dùng *Prepared Statement* cho an toàn và đơn giản;
+hoặc nếu muốn đổi gió có thể dùng các hàm replace có sẵn hay là chạy vòng lặp từ đầu đến cuối tìm xem chỗ nào có dạng { ... } thì thay giá trị vào (đương nhiên phải validate kĩ input của user )
+
+Điều bất thường ở đây là ứng dụng đang chạy một vòng lặp While để kiểm tra liên tục xem còn chỗ nào có { ... } không thì cứ tiếp tục thay vào:
+
+```python
+        while self.placeholders:
+
+            current_key = self.placeholders[0]
+
+            replacement_map = dict.fromkeys(
+
+                self.placeholders,
+
+                lambda _, key: f"{{{key}}}"
+
+            )
+
+            for placeholder_key in self.placeholders:
+
+                if placeholder_key in self.validators:
+
+                    if current_key == placeholder_key:
+
+                        replacement_map[placeholder_key] = self.validators[placeholder_key].get_validated_value()
+
+                else:
+
+                    replacement_map[placeholder_key] = InputValidator
+
+            query = query.format_map(
+
+                type('FormatDict', (), {
+
+                    '__getitem__': lambda _, key: (
+
+                        replacement_map[key] if isinstance(replacement_map[key], str)
+
+                        else replacement_map[key]("", key)
+
+                    )
+
+                })()
+
+            )
+```
+
+Để cho các bạn dễ hình dung thì giả sử mình nhập vào form đăng nhập một cách dị dị như kiểu:
+
+username :  {abcdxyz}
+password:  {spamspamspam}
+
+Thì từ:
+```
 "SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+```
+
+Ứng dụng sẽ chạy vòng While và thay thế thành:
+```
+"SELECT * FROM users WHERE username = '{abcdxyz}' AND password = '{spamspamspam}'"
+```
+
+Sau đó, khi thấy vẫn còn placeholder dạng { ... } thì lại chạy tiếp vòng lặp và do không có value tương ứng nên sẽ gán thành rỗng và query trở thành:
+![[Attachments/Pasted image 20261118233521.png|700]]
+
+Thật ra cái này trông có vẻ vô hại thật, vì chúng ta chưa thể kiểm soát được giá trị sẽ thay thế tương ứng,... hoặc là có thể ?
+
+Nhìn lại Logic vòng While một chút, trong đoạn này:
+```python
+for placeholder_key in self.placeholders:
+
+                if placeholder_key in self.validators:
+
+                    if current_key == placeholder_key:
+
+                        replacement_map[placeholder_key] = self.validators[placeholder_key].get_validated_value()
+
+                else:
+
+                    replacement_map[placeholder_key] = InputValidator
+
+            query = query.format_map(
+
+                type('FormatDict', (), {
+
+                    '__getitem__': lambda _, key: (
+
+                        replacement_map[key] if isinstance(replacement_map[key], str)
+
+                        else replacement_map[key]("", key)
+
+                    )
+
+                })()
+
+            )
+
+            self.placeholders = self.extract_placeholders(query)
 ```
