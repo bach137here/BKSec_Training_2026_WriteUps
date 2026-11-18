@@ -28,3 +28,4 @@ Logic của app được thể hiện trong **app.py**:
 ![[Attachments/2026-11-18_22-46.png]]
 
 
+Ta thấy sự xuất hiện của class Query Builder trong logic
