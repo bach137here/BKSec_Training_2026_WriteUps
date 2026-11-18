@@ -243,7 +243,10 @@ Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là v�
 username : {password.__init__.__globals__[os].popen('cat /flag_*').read()}
 password : abc
 ```
-đúng không? Mình cũng nghĩ vậy... Nhưng mình thử thì không thấy gì được in ra terminal của server và không cả có log Executing query.... không hiểu 
+đúng không? Mình cũng nghĩ vậy... Nhưng mình thử thì không thấy gì được in ra terminal của server và không cả có log Executing query.... không hiểu vì sao :))
+
+Nhưng mình biết vì sao command trên không chạy được: do format_map(), chỉ lấy giá trị trả về, không bao giờ execute, bạn có thể thử như sau sẽ thấy trong trường hợp này sau khi format sẽ trả về một object:
+
 
 (Để hiểu hơn về payload trên bạn có thể đọc tại: https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html)
 
