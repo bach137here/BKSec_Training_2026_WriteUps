@@ -136,7 +136,7 @@ for placeholder_key in self.placeholders:
 Logic của nó kiểu:
 *Nếu có key nào đầu vào trùng với placeholder đang có trong query => Thay giá trị ứng với key đó vào*
 
-*Nếu không =>  Gán value ứng với key đó thành object InputValidator !?*
+*Nếu không =>  Gán value ứng với key đó thành instance InputValidator !?*
 
 *Với map vừa tạo được dùng str.format_map() để thay thế*
 
@@ -153,7 +153,7 @@ Bạn đọc thêm tại: https://docs.python.org/3/library/string.html
 Nhìn thì phức tạp nhưng bạn có thể xem phần ví dụ bên dưới:
 ![[Attachments/Pasted image 20261118235232.png]]
 
-Bạn có thể thấy, thật tuyệt vời khi chúng ta có thể làm một vài điều khá thù vị như kiểu truy cập attribute, gọi các hàm str(), repr(),.. của object.
+Bạn có thể thấy, thật tuyệt vời khi chúng ta có thể làm một vài điều khá thù vị như kiểu truy cập attribute, gọi các hàm str(), repr(),.. của instance.
 
 Điều này không khác gì mỏ vàng vì kết hợp với phân tích ở trước, chúng ta có thể bypass hoàn toàn bộ lọc bằng cách dùng chính list **FORBIDDEN_CHARACTERS** trong class **Input Validator** để bypass và chèn được kí tự bị cấm vào query của mình, và có được lỗ hỏng đầu tiên - ***SQL injection***:
 
@@ -240,14 +240,11 @@ Vấn đề đặt ra bây giờ là flag đang được giấu tên file nên m
 
 Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là vẫn dựa vào cái cách bypass lúc nãy để có thể 'leo' để có được lên các hàm nguy hiểm để thực thi mã độc như ý tưởng đã có giống SSTI bằng các payload cực kì sáng tạo kiểu: 
 ```
-username : {password.__init__.__globals__[os].popen('cat /flag_*').read()}
+username : { password.__class__.mro()[1].__subclasses__()[396]('echo HIII',shell=True,stdout=-1).communicate()[0].strip() }
 password : abc
 ```
-đúng không? Mình cũng nghĩ vậy... Nhưng đáng tiếc là format() không cho phép
-
-Nhưng mình biết vì sao command trên không chạy được: do format_map(), chỉ lấy giá trị trả về, không bao giờ execute, bạn có thể thử như sau sẽ thấy trong trường hợp này sau khi format sẽ trả về một object:
-
-
+đúng không? Mình cũng nghĩ vậy... Nhưng đáng tiếc là format_map() sẽ không thể truy cập đến hàm mà sẽ luôn coi cái đang được hướng tới là một attribute:
+![[Attachments/Pasted image 20261119015154.png]]
 (Để hiểu hơn về payload trên bạn có thể đọc tại: https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html)
 
 Lúc này nhờ AI thì mình mới nhận ra một điểm là ở phần chèn thư viện có 2 thư viện chèn mà không được dùng tí nào:
