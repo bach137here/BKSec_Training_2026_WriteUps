@@ -255,5 +255,21 @@ Trong đó có cái ctypes cực kì đáng nghi :)) ngay phần cảnh báo tr�
 Bạn đọc thêm tại: https://docs.python.org/3/library/ctypes.html
 ![[Attachments/Pasted image 20261119003737.png]]
 
+Nhìn qua source code của cái này ta thấy có cdll là một object được tạo ra từ class LibraryLoader:
+![[Attachments/Pasted image 20261119105142.png]]
 
-Trong thư viện này có một hàm cho phép load một shared library tùy ý vào
+Điểm đặc biệt là class này có thuộc tính` __getattr__ ` sẽ gọi ngược lại lên CDLL rồi cuối cùng đi được đến `_load_library` và gọi đến `_dlopen`:
+![[Attachments/Pasted image 20261119105644.png]]
+
+![[Attachments/Pasted image 20261119105802.png]]
+
+Nếu không có sức mạnh khủng khiếp của AI thì mình không bao giờ tìm được các Gadget ảo ma thế này mất😭
+
+Kết hợp thêm với 2 dữ kiện chúng ta đã có ở trước:
+- Viết/đọc file tùy ý
+-  Format string syntax trong str.format_map()
+
+Chúng ta có được RCE bằng cách:
+1) Nạp một file .so độc hại lên server bằng cách ghi file thông qua SQL injection
+2) Thực thi file vừa nạp vào thông qua Format string syntax trong str.format_map() và 
+3) 
