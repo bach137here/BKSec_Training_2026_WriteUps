@@ -136,7 +136,7 @@ for placeholder_key in self.placeholders:
 Logic của nó kiểu:
 *Nếu có key nào đầu vào trùng với placeholder đang có trong query => Thay giá trị ứng với key đó vào*
 
-*Nếu không =>  Gán value ứng với key đó thành instance InputValidator !?*
+*Nếu không =>  Gán value ứng với key đó thành class InputValidator !?*
 
 *Với map vừa tạo được dùng str.format_map() để thay thế*
 
